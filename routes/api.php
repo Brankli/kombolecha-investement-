@@ -30,6 +30,7 @@ use App\Http\Controllers\VisitorController;
 */
 
 Route::middleware(['auth:api'])->group(function () {
+    // 
     //user route
     Route::get('/user/getall', [UserController::class, 'index']);
     Route::get('/edit/user/{id}', [UserController::class, 'edit']);
@@ -82,6 +83,8 @@ Route::middleware(['auth:api'])->group(function () {
     //testimoniyals route
     Route::post('/store/testimonial',[TestimonailController::class,'store']);
    Route::post('/testimonial/hidden',[TestimonailController::class,'hidden']);
+   Route::put('/testimonials/{id}/hidden', [TestimonailController::class, 'updateHidden']);
+
 
    //banner api
    Route::post('/store/banner',[BannerController::class,'store']);

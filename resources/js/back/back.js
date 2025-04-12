@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import QuillEditor from "../../js/back/QuillEditor.vue"
+
 
 library.add(fas, far, fab);
 const app = createApp(App);
@@ -19,6 +21,7 @@ app.use(Vue3Toasity, {
     autoClose: 3000,
 });
 app.component("font-awesome-icon", FontAwesomeIcon);
+app.component("QuillEditor", QuillEditor);
 app.use(pinia);
 app.use(router);
 app.mount("#app");

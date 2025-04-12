@@ -144,8 +144,8 @@ const nextPage = () => {
                   <p class="hover:text-sky-800">{{ testimonial.Name }}</p>
                 </td>
                 <td>
-                  <p class="hover:text-sky-800">
-                    {{ testimonial.discribution }}
+                  <p class="preview quil-editor hover:text-sky-800" v-html="testimonial.discribution">
+              
                   </p>
                 </td>
               </tr>

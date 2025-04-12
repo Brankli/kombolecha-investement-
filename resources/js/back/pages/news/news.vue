@@ -4,14 +4,16 @@ import { onMounted, ref, computed } from "vue";
 import { format, parseISO } from 'date-fns'
 import name from "../../components/name.vue";
 import event from "../events/event.vue";
+import succs from "../conformation/succ.vue";
+import errs from "../conformation/err.vue";
 import { useLocalStorage } from "@vueuse/core";
-import { useAlertsStore } from "../../../store/useAlertsStore";
 
-const alertStore = useAlertsStore();
 const token = useLocalStorage('token', '');
 const allnews = ref([]);
 const dletedId = ref([]);
-const dletecound = ref(0);
+const dletecound = ref(0)
+const succ = ref('');
+const err = ref('');
 const perPage = ref(5);
 const currentPage = ref(1);
 const keywords = ref('');
@@ -42,14 +44,10 @@ function countandtrash(id) {
 const hidennews = () => {
     axios.defaults.headers.common['Authorization'] = token.value;
     axios.post('./api/hidden', { id: dletedId.value }).then(res => {
-        alertStore.showSuccessToast(res.data.message);
+        succ.value = res.data.message;
         gettingallnews();
-        setTimeout(() => {
-            dletedId.value = '';
-            dletecound.value = '';
-        }, 2000);
     }).catch(error => {
-        alertStore.showErrortost(error.response.data.error);
+        return err.value = error.data.message;
     })
 }
 
@@ -85,14 +83,15 @@ const formatDate = (isoDateString) => {
 </script>
 
 <template>
-    <div class="bg-gray-100 mb-24">
-        <name name="news events" />
+    <div class="bg-gray-100">
+        <name name="news and events" />
+        <succs v-if="succ" :succ="succ" />
+        <errs v-if="err" :err="err" />
         <div class="m-4 rounded">
             <div class="w-full bg-white border-b-2 rounded border-gray-200 flex flex-row justify-between">
                 <h1 class="font-bold text-gray-500 text-lg p-4 capitalize">News table</h1>
                 <router-link to="/post"
-                    class="w-fit text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 m-4 text-center ">Add
-                    News</router-link>
+                    class="w-24 text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 m-4 text-center ">Post</router-link>
             </div>
 
             <!-- table start here -->
@@ -103,9 +102,8 @@ const formatDate = (isoDateString) => {
                         class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
                         <div>
                             <div v-if="dletecound" class="align-middle">
-                                <p><span class="text-blue-500 w-4 h-4 bg-gray-200 rounded-full p-2 font-bold">{{
-                                        dletecound
-                                        }}</span> row selected <i @click.prevent="hidennews"
+                                <p><span class="text-blue-500 w-4 h-4 bg-gray-200 rounded-full p-2 font-bold">{{ dletecound
+                                }}</span> row selected <i @click.prevent="hidennews"
                                         class="material-icons text-xl font-extrabold w-10 h-10 hover:bg-gray-400 text-center p-2 bg-gray-200 rounded-full text-red-500">delete</i>
                                 </p>
                             </div>
@@ -155,8 +153,8 @@ const formatDate = (isoDateString) => {
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     {{ news.title.slice(0, 20) }}
                                 </th>
-                                <td class="px-6 py-4">
-                                    {{ news.content.slice(0, 30) }}
+                                <td class=" preview quil-editor px-6 py-4" v-html="news.content">
+                                    
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ news.info.slice(0, 15) }}
@@ -172,28 +170,23 @@ const formatDate = (isoDateString) => {
                             </tr>
                         </tbody>
                     </table>
-                    <div v-if="perPage > 4" class="w-full justify-center gap-2 flex flex-row pt-4">
+                    <div v-if="perPage >4" class="w-full justify-between flex flex-row pt-4">
                         <div><button
-                                class="shadow p-2 cursor-pointer bg-gray-200 active:text-red-500 hover:bg-gray-300 text-briteblue text-lg font-bold rounded"
+                                class="shadow p-2 bg-gray-200 active:text-red-500 hover:bg-gray-300 text-briteblue text-lg font-bold rounded"
                                 @click="prevPage" :disabled="currentPage === 1">Back</button></div>
-                        <div> <button
-                                class="shadow p-2 bg-gray-200 text-briteblue hover:bg-gray-300 text-lg font-bold rounded">page
-                                {{
-                                currentPage
-                                }}</button></div>
+                        <div><span class=" p-2 bg-gray-200 text-lg font-bold rounded">{{ currentPage }}</span></div>
                         <div><button
-                                class="shadow p-2 bg-gray-200 cursor-pointer active:text-red-500 text-briteblue hover:bg-gray-300 text-lg font-bold rounded"
+                                class="shadow p-2 bg-gray-200 active:text-red-500 text-briteblue hover:bg-gray-300 text-lg font-bold rounded"
                                 @click="nextPage" :disabled="currentPage === totalPages">Next</button></div>
                     </div>
                 </div>
             </div>
             <!-- events -->
 
-            <div class="mt-16">
-                <event />
-            </div>
+        <div class="mt-16">
+            <event />
         </div>
-
-
     </div>
-</template>
+
+
+</div></template>

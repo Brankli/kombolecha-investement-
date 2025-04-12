@@ -14,6 +14,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create(['name'=>'admin','email'=>'hre4422@gmail.com@gmail.com','verificationtoken'=>str::random(60),'password'=>'12345678']);
+        User::create(['name'=>'admin','email'=>'hre4422@gmail.com','verificationtoken'=>str::random(60),'password'=>'12345678']);
     }
 }
