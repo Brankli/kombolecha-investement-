@@ -18,6 +18,5 @@
     <body >
         <div id="app"></div>
         <script src="{{mix('back.js')}}"></script>
-
     </body>
 </html>

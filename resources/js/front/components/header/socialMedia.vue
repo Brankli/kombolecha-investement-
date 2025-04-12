@@ -6,65 +6,54 @@ import lang from "./lang.vue";
     <div class="w-full bg-briteblue border-b-2 border-green-100 top-0">
         <div class="flex flex-wrap items-center justify-between px-4 py-2">
             <!-- Contact Info Section -->
-            <div class="w-full md:w-fit text-sm text-white font-semibold py-2">
+            <div class="w-full md:w-fit text-sm text-white font-semibold">
                 <div class="flex items-center justify-center gap-3 py-1">
-                    <i class="fas fa-map-marker-alt text-lg"></i>
-                    <span class="text-lg">Kombolcha, Ethiopia</span>
-                    <i class="fas fa-envelope text-lg"></i>
-                    <span class="text-lg">kochinvest12@gmail.com</span>
-                    <i class="fas fa-phone-alt text-lg"></i>
-                    <span class="text-lg">+25197 585 6741</span>
+                    <i class="fas fa-map-marker-alt text-xs"></i>
+                    <span class="text-xs">Kombolcha, Ethiopia</span>
+                    <i class="fas fa-envelope text-xs"></i>
+                    <span class="text-xs">kochinvest12@gmail.com</span>
+                    <i class="fas fa-phone-alt text-xs"></i>
+                    <span class="text-xs">+25197 585 6741</span>
                 </div>
             </div>
-
-            <!-- Social Links Section -->
+ 
             <div class="w-full md:w-fit">
-                <ul
-                    class="flex flex-wrap justify-center md:justify-end list-none space-x-6"
-                >
+                <ul class="flex flex-wrap justify-center md:justify-end list-none space-x-3">
                     <!-- Telegram Icon -->
                     <li>
-                        <a
-                            href="https://t.me/kombolchaindustryandinvestment"
-                            class="text-sm font-semibold py-1 px-3 text-white hover:text-green-400 transition-all duration-300 text-xl"
-                        >
+                        <a href="https://t.me/kombolchaindustryandinvestment"
+                            target="_blank"
+                            class="font-semibold py-1 text-white hover:text-green-400 transition-all duration-300 text-xl">
                             <i class="fab fa-telegram-plane"></i>
                         </a>
                     </li>
 
                     <!-- Facebook Icon -->
                     <li>
-                        <a
-                            href="https://web.facebook.com/profile.php?id=100081126495660"
-                            class="text-sm font-semibold py-1 px-3 text-white hover:text-green-400 transition-all duration-300 text-xl"
-                        >
+                        <a href="https://web.facebook.com/profile.php?id=100081126495660"
+                            target="_blank"
+                            class="font-semibold py-1 text-white hover:text-green-400 transition-all duration-300 text-xl">
                             <i class="fab fa-facebook-f"></i>
                         </a>
                     </li>
 
                     <!-- YouTube Icon -->
                     <li>
-                        <a
-                            href="https://www.youtube.com/@kombolchacityindustryandin1377"
-                            class="text-sm font-semibold py-1 px-3 text-white hover:text-green-400 transition-all duration-300 text-xl"
-                        >
+                        <a href="https://www.youtube.com/@kombolchacityindustryandin1377"
+                            target="_blank"
+                            class="font-semibold py-1 text-white hover:text-green-400 transition-all duration-300 text-xl">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </li>
 
                     <!-- Twitter Icon -->
                     <li>
-                        <a
-                            href="#"
-                            class="text-sm font-semibold py-1 px-3 text-white hover:text-green-400 transition-all duration-300 text-xl"
-                        >
+                        <a href="#"
+                            target="_blank"
+                            class="font-semibold py-1 px-3 text-white hover:text-green-400 transition-all duration-300 text-xl">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </li>
-
-                    <!-- <li class="pl-4">
-                        <lang />
-                    </li> -->
                 </ul>
             </div>
         </div>

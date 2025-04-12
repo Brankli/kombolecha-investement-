@@ -1,24 +1,29 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
-import sidbar from "./components/sidebar.vue"
+
 import home from './news/home.vue';
-import recentevent from "./news/component/recentevent.vue";
+import partner from "./components/partner.vue";
+import testimonial from "./components/testimonial.vue";
 import banner from "./components/banner.vue";
-const perevent = ref(7);
-const currenteventpage = ref(1);
+import sidbar from "./components/sidebar.vue";
+import recentevent from "./news/component/recentevent.vue";
+
+
+const preEvent = ref(7);
+const currentEventPage = ref(1);
 const events = ref([]);
 
 
-onMounted(async() => {
+onMounted(async () => {
     await axios.get('./api/event/getall').then(res => {
         events.value = res.data.events;
     }).catch(err => console.log(err));
 })
 
-const paginatevent = computed(() => {
-    const start = (currenteventpage.value - 1) * perevent.value;
-    const end = start + perevent.value;
+const paginateEvent = computed(() => {
+    const start = (currentEventPage.value - 1) * preEvent.value;
+    const end = start + preEvent.value;
     return events.value.slice(start, end);
 });
 
@@ -51,7 +56,7 @@ const paginatevent = computed(() => {
                 <h1 class=" text-darkred  p-4 border-b-4 border-darkred w-fit font-bold text-2xl">Announcments</h1>
             </div>
             <!-- recent list -->
-            <div v-for="event in paginatevent" :key="event">
+            <div v-for="event in paginateEvent" :key="event">
                 <recentevent v-if="event.type == 'announcment'" :event="event" />
             </div>
 
@@ -73,7 +78,7 @@ const paginatevent = computed(() => {
             </div>
             <!-- recentlist -->
 
-            <div v-for="event in paginatevent" :key="event">
+            <div v-for="event in paginateEvent" :key="event">
                 <recentevent v-if="event.type == 'event'" :event="event" />
             </div>
 
@@ -84,5 +89,10 @@ const paginatevent = computed(() => {
         </div>
         <div class="sm:col-span-2 ">
         </div>
+    </div>
+
+    <div>
+        <testimonial />
+        <partner />
     </div>
 </template>

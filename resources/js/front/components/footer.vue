@@ -1,15 +1,8 @@
 <script setup>
-import subscribe from "./subscrib.vue";
-import partner from "./partner.vue";
-import testimonial from "./testimonial.vue";
+import subscribe from "./subscrib.vue"
 </script>
 
 <template>
-    <div>
-        <testimonial />
-        <partner />
-    </div>
-
     <footer class="bg-cyan-950 text-white pt-10 font-roboto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

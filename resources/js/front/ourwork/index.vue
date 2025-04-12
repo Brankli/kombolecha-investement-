@@ -1,27 +1,20 @@
 <script setup>
-import Card from "./components/card.vue"
-import immagezoom from "./immagezoom.vue";
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
-import { format, parseISO } from 'date-fns';
+
+import ImageZoom from "./ImageZoom.vue";
+import Card from "./components/card.vue";
+import navigation from "./components/navigation.vue";
+
 const PreviousWorks = ref([]);
 const perPage = ref(10);
 const currentPage = ref(1);
 const keywords = ref('');
-const zoomimage = ref('');
-import navigation from "./components/navigation.vue"
-onMounted(async () => {
-    try {
-        await axios.get('./api/getall/PreviousWork').then(res => {
-            PreviousWorks.value = res.data;
-        }).catch(err => console.log(err));
-    } catch (err) {
-        console.error(err);
-    }
-});
+const zoomImage = ref('');
 
 const filteredWorks = computed(() => {
     const keyword = keywords.value.toLowerCase();
+
     if (keyword == '') {
         return PreviousWorks.value;
     } else {
@@ -47,30 +40,41 @@ const nextPage = () => {
         currentPage.value++;
     }
 };
-
-const formatDate = (isoDateString) => {
-    const date = parseISO(isoDateString);
-    return format(date, 'yyyy-MM-dd');
-};
-const togglefilter = (event)=>{
+ 
+const toggleFilter = (event) => {
     keywords.value = event;
 }
 
-const zoomout = (zoom)=>{
-    zoomimage.value = zoomimage.value === '' ? zoom : '';
+const zoomOut = (zoom) => {
+    zoomImage.value = zoomImage.value === '' ? zoom : '';
 }
+
+onMounted(async () => {
+    try {
+        await axios.get('./api/getall/PreviousWork').then(res => {
+            PreviousWorks.value = res.data;
+        }).catch(err => console.log(err));
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 </script>
 <template>
-    <immagezoom v-if="zoomimage" :zoomimage="zoomimage" @some-event="zoomout" />
+    <ImageZoom v-if="zoomImage" 
+        :zoomImage="zoomImage" 
+        @some-event="zoomOut" />
+
     <div class=" text-colorbackground mt-4  z-0">
         <div class="">
             <main class="px-4 py-6 bg-white ">
                 <header>
                     <div>
-                        <div class=" border-b  border-gray-200 z-0 ">
-                            <h3 class="font-semibold text-2xl pb-2  ">
-                                {{ $t('lang.WorkSector') }}
-                            </h3>
+                        <div class=" z-0 ">
+                            <div class="text-center py-8">
+                                <h3 class="font-bold text-4xl"> Our Works </h3>
+                            </div>
+
                             <div class="sm:hidden block">
                                 <select v-model="keywords" name="time" id="time"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2 outline-none">
@@ -87,11 +91,18 @@ const zoomout = (zoom)=>{
                                 </select>
                             </div>
                         </div>
-                        <navigation @some-event="togglefilter" />
-                        <div class="mt-8 grid lg:grid-cols-4 gap-6">
+                        
+                        <navigation 
+                            class="hidden md:flex" 
+                            @some-event="toggleFilter" />
 
-                            <div v-for="work in paginatedData" :key="work.id">
-                                <Card :work="work" @click.prevent="zoomout(work.image)" />
+                        <div class="my-12 flex flex-wrap lg:w-[90%] items-center justify-center gap-4 mx-auto">
+                            <div v-for="work in paginatedData" 
+                                :key="work.id" 
+                                class="flex-grow max-w-[350px] group relative overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 cursor-pointer portfolio-item">
+                                <Card 
+                                    :work="work"
+                                    @click.prevent="zoomOut(work.image)" />
                             </div>
                         </div>
                     </div>
