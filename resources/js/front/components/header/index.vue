@@ -1,44 +1,69 @@
 <script setup>
-import navigation from './navigation.vue';
-import socialMedia from './socialMedia.vue';
+import navigation from "./navigation.vue";
+import socialMedia from "./socialMedia.vue";
 import logo from "./logo.vue";
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { onMounted, onUnmounted, ref, nextTick } from "vue";
 
-onMounted(async()=>{
-    await axios.post('./api/visiters').then(res=>{
-        console.log(res);
-    }).catch(err=>{
-        console.log(err);
-    })
-})
+const isSticky = ref(false);
+const navHeight = ref(0);
+const navRef = ref(null);
+const placeholderRef = ref(null);
 
+// update navHeight after DOM is ready
+const updateNavHeight = () => {
+    nextTick(() => {
+        if (navRef.value) {
+            navHeight.value = navRef.value.offsetHeight;
+        }
+    });
+};
 
-const hiddenClass = ref('');
-
-
-
-const hiddenLogo = () => {
-    if (window.scrollY) {
-        hiddenClass.value = "hidden";
-    } else {
-        hiddenClass.value = '';
+const handleScroll = () => {
+    if (!placeholderRef.value || !navRef.value) return;
+    const rect = placeholderRef.value.getBoundingClientRect();
+    isSticky.value = rect.top <= 0;
+    if (isSticky.value) {
+        updateNavHeight();
     }
-}
+};
 
 onMounted(() => {
-    window.addEventListener("scroll", hiddenLogo);
+    updateNavHeight();
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", updateNavHeight); // also handle resize
+});
+
+onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", updateNavHeight);
 });
 </script>
- 
+
 <template>
-    <div class="border-b z-50 bg-white w-full top-0  shadow-lg">
-        <div>
+    <div class="bg-white w-full">
+        <!-- Top section hidden on small screens -->
+        <div class="hidden md:block">
             <socialMedia />
-            <logo :class="hiddenClass" />
+            <logo />
         </div>
-        <navigation class="border-b-2  border-gray-200 shadow-md shadow-gray-600" />
+
+        <!-- Placeholder to track scroll -->
+        <div ref="placeholderRef"></div>
+
+        <!-- Spacer to prevent layout shift -->
+        <div :style="{ height: isSticky ? navHeight + 'px' : '0px' }"></div>
+
+        <!-- Sticky Navigation -->
+        <div
+            ref="navRef"
+            :class="[
+                'transition-all duration-300',
+                isSticky
+                    ? 'fixed top-0 left-0 w-full z-50 shadow-md bg-white'
+                    : '',
+            ]"
+        >
+            <navigation />
+        </div>
     </div>
 </template>
-
-
