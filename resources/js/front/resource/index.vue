@@ -54,7 +54,7 @@ function nextPage() {
                 />
             </div>
 
-            <div class="w-full bg-white mt-8 py-4">
+            <div class="bg-white mt-8 py-4">
                 <div class="flex justify-center items-center gap-4">
                     <button
                         class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"

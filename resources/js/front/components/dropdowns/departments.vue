@@ -1,35 +1,44 @@
 <script setup>
-const emit = defineEmits(['someEvent'])
-const handelevent = (event)=>{
-    emit('someEvent');
-}
+const emit = defineEmits(["someEvent"]);
+const handleEvent = () => {
+    emit("someEvent");
+};
 </script>
 
 <template>
-    <div @click.prevent="handelevent"
-        class="absolute dropdowns bg-gray-700 border-2 border-gray-200 rounded shadow-sm">
-        <div class=" flex flex-col text-md p-4 text-briteblue">
-            <div class="border-b-2 lg:border-b-0 p-2 border-yellow-600">
-                <router-link class="px-4 hover:border-b-4  border-darkred" to="/expansion">
-                    <span>{{ $t('lang.expInvestment') }}</span>
-                </router-link>
-            </div>
-            <div class="border-b-2 lg:border-b-0 p-2 border-yellow-600">
-                <router-link class="px-4 hover:border-b-4  border-darkred" to="/development">
-                    <span>{{ $t('lang.industrydev') }}</span>
-                </router-link>
-            </div>
-            <div class="border-b-2 lg:border-b-0 p-2 border-yellow-600">
-                <router-link class="px-4 hover:border-b-4   border-darkred" to="/minirals">
-                    <span>{{ $t('lang.mining opma') }}</span>
-                </router-link>
-            </div>
+    <div
+        @click.prevent="handleEvent"
+        class="absolute dropdowns right-0 mt-1 w-64 bg-gray-800 border border-gray-300 rounded-lg shadow-lg overflow-hidden"
+    >
+        <div
+            class="flex flex-col divide-y divide-gray-600 text-base text-white"
+        >
+            <router-link
+                to="/expansion"
+                class="px-6 py-3 hover:bg-gray-700 hover:text-orange-400 transition-all duration-200"
+            >
+                {{ $t("lang.expInvestment") }}
+            </router-link>
+
+            <router-link
+                to="/development"
+                class="px-6 py-3 hover:bg-gray-700 hover:text-orange-400 transition-all duration-200"
+            >
+                {{ $t("lang.industrydev") }}
+            </router-link>
+
+            <router-link
+                to="/minirals"
+                class="px-6 py-3 hover:bg-gray-700 hover:text-orange-400 transition-all duration-200"
+            >
+                {{ $t("lang.mining opma") }}
+            </router-link>
         </div>
     </div>
 </template>
-<style>
-.dropdowns{
-    z-index: 10;
+
+<style scoped>
+.dropdowns {
+    z-index: 50;
 }
 </style>
-

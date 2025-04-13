@@ -19,7 +19,7 @@ function downloadpdf(resource) {
 </script>
 
 <template>
-    <div class="bg-white cursor-pointer rounded-lg hover:ml-4 m-3">
+    <div class="bg-white cursor-pointer rounded-lg">
         <div
             class="flex gap-3 bg-orange-200 p-2.5 border rounded flex-wrap border-sky-600"
         >

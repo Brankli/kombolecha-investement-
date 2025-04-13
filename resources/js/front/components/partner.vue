@@ -1,94 +1,85 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
+
+// Swiper Vue.js components + Autoplay module
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Autoplay, Navigation } from "swiper/modules"; // ✅ Correct way to import modules
+import { Autoplay } from "swiper/modules";
+
+// Only the base Swiper CSS is needed
 import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/autoplay";
 
 const sponsers = ref([]);
+let swiperInstance = null;
+
+// Grab the Swiper instance and force‑start autoplay
+const onSwiper = (swiper) => {
+    swiperInstance = swiper;
+    swiper.autoplay.start();
+};
 
 onMounted(async () => {
     try {
         const res = await axios.get("./api/getall/sponser");
         sponsers.value = res.data;
     } catch (err) {
-        console.log(err);
+        console.error("Error fetching sponsors:", err);
     }
 });
 </script>
+
 <template>
-    <div class="relative m-16">
-        <div class="text-center">
-            <h1
-                class="mt-4 text-2xl font-bold text-darkred sm:text-3xl xl:text-4xl font-pj"
+    <section class="py-16 bg-white">
+        <div class="text-center mb-10">
+            <h2
+                class="text-2xl sm:text-3xl xl:text-4xl font-bold text-orange-400"
             >
                 {{ $t("lang.Partners") }}
-            </h1>
+            </h2>
         </div>
 
-        <!-- Custom Arrows -->
-        <!-- Custom Arrows -->
-        <div
-            class="absolute -left-6 top-1/2 z-10 mt-12 transform -translate-y-1/2 cursor-pointer bg-blue-500 shadow-lg rounded-full p-2 hover:bg-blue-600 transition"
-            id="custom-prev"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        <div class="max-w-4xl mx-auto">
+            <Swiper
+                :modules="[Autoplay]"
+                :loop="true"
+                :autoplay="{ delay: 2500, disableOnInteraction: false }"
+                :slides-per-view="1"
+                :centeredSlides="true"
+                :spaceBetween="20"
+                :observer="true"
+                :observeParents="true"
+                :breakpoints="{
+                    640: { slidesPerView: 2, centeredSlides: true },
+                    1024: { slidesPerView: 3, centeredSlides: true },
+                }"
+                @swiper="onSwiper"
+                class="w-full"
             >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M15 19l-7-7 7-7"
-                />
-            </svg>
-        </div>
-
-        <div
-            class="absolute -right-6 top-1/2 z-10 mt-12 transform -translate-y-1/2 cursor-pointer bg-blue-500 shadow-lg rounded-full p-2 hover:bg-blue-600 transition"
-            id="custom-next"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M9 5l7 7-7 7"
-                />
-            </svg>
-        </div>
-
-        <!-- Swiper Slider -->
-        <Swiper
-            :modules="[Autoplay, Navigation]"
-            :slides-per-view="6"
-            :space-between="10"
-            :loop="true"
-            :autoplay="{ delay: 2000, disableOnInteraction: false }"
-            :navigation="{ prevEl: '#custom-prev', nextEl: '#custom-next' }"
-            class="mt-16"
-        >
-            <SwiperSlide v-for="sponser in sponsers" :key="sponser.id">
-                <div class="flex justify-center">
+                <SwiperSlide
+                    v-for="s in sponsers"
+                    :key="s.id"
+                    class="flex justify-center items-center"
+                >
                     <img
-                        :src="sponser.image"
-                        alt="Sponser Logo"
-                        class="h-16 object-contain"
+                        :src="s.image"
+                        :alt="s.name || 'Partner Logo'"
+                        class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-contain transition-transform duration-300"
                     />
-                </div>
-            </SwiperSlide>
-        </Swiper>
-    </div>
+                </SwiperSlide>
+            </Swiper>
+        </div>
+    </section>
 </template>
+
+<style scoped>
+/* Ensure no bullets ever appear */
+.swiper-pagination {
+    display: none !important;
+}
+/* Force each slide to center its content */
+.swiper-slide {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+</style>

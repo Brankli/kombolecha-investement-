@@ -3,7 +3,7 @@ import subscribe from "./subscrib.vue";
 </script>
 
 <template>
-    <footer class="bg-cyan-950 text-white pt-10 font-roboto text-sm">
+    <footer class="bg-cyan-950 text-white pt-10 font-roboto text-sm w-full">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- About -->
@@ -251,7 +251,7 @@ import subscribe from "./subscrib.vue";
                 class="mt-6 text-center text-xs md:text-sm text-gray-400 border-t border-gray-700 pt-4 pb-2"
             >
                 &copy; {{ new Date().getFullYear() }} Design &amp; Developed by
-                Degan Technologies Plc
+                Degan Technologies PLC.
             </div>
         </div>
     </footer>

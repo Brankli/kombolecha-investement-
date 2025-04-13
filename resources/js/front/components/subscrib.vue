@@ -24,7 +24,7 @@ const storesubscriber = () => {
     <div class="w-full sm:w-10/12 md:w-6/12 px-5">
         <form class="flex flex-col sm:flex-row gap-3" id="subscribeForm">
             <input
-                class="flex-1 border border-gray-300 rounded-md py-2 px-3 focus:outline-none"
+                class="flex-1 border border-gray-300 rounded-md py-1 px-3 focus:outline-none text-black"
                 type="email"
                 placeholder="Enter your email"
                 v-model="email"
@@ -34,7 +34,7 @@ const storesubscriber = () => {
             />
             <button
                 @click.prevent="storesubscriber"
-                class="bg-blue-500 text-white text-lg font-bold px-5 py-2 border border-blue-700 rounded-md cursor-pointer"
+                class="bg-blue-500 text-lg font-bold px-5 py-1 border border-blue-700 rounded-md cursor-pointer"
                 type="submit"
             >
                 Subscribe
