@@ -10,19 +10,23 @@ use Illuminate\Support\Facades\Validator;
 class DepartmentContentroller extends Controller
 {
 
-    public function index()
-    {
-        try {
-            $DepartmentContents = DepartmentContent::orderBy('id', 'desc')->paginate(10);
+    public function index() {
+        $departmentContents = DepartmentContent::orderByDesc('id')->paginate(10);
 
-            if ($DepartmentContents->isEmpty()) {
-                return response()->json(['message' => 'No DepartmentContent found'], 404);
-            }
-
-            return response()->json(['DepartmentContent' => $DepartmentContents], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch DepartmentContent'], 500);
+        if ($departmentContents->isEmpty()) {
+            return response()->json(['message' => 'No DepartmentContent found'], 404);
         }
+
+        $visions = DepartmentContent::pluck('vission');
+        $missions = DepartmentContent::pluck('mission');
+        $goals = DepartmentContent::pluck('goal'); 
+
+        return response()->json([
+            'departmentContents'  => $departmentContents,
+            'visions'             => $visions,
+            'missions'            => $missions,
+            'goals'               => $goals, 
+        ]);
     }
 
     public function edit($id)
@@ -79,5 +83,27 @@ class DepartmentContentroller extends Controller
         }catch(ModelNotFoundException $e){
             return response()->json(['error'=> 'server error'], 500);
         }
+    }
+
+
+    public function getStaffs() { 
+        $departmentContents = DepartmentContent::orderByDesc('id')->paginate(10);
+
+        if ($departmentContents->isEmpty()) {
+            return response()->json(['message' => 'No DepartmentContent found'], 404);
+        } 
+
+        $departmentHead     = $departmentContents->firstWhere('position', 'deparment head');
+        $mineralDirector    = $departmentContents->firstWhere('position', 'miniral director');
+        $expansionDirector  = $departmentContents->firstWhere('position', 'expansion director');
+        $developmentDirector = $departmentContents->firstWhere('position', 'development director');
+
+        return response()->json([ 
+
+            'departmentHead'      => $departmentHead,
+            'mineralDirector'     => $mineralDirector,
+            'expansionDirector'   => $expansionDirector,
+            'developmentDirector' => $developmentDirector,
+        ]);
     }
 }

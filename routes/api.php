@@ -123,11 +123,11 @@ Route::get('/edit/content/{id}', [WebContentController::class, 'edit']);
 Route::post('/store/department', [DepartmentContentroller::class, 'store']);
 Route::get('/getall/department', [DepartmentContentroller::class, 'index']);
 Route::get('/edit/department/{id}', [DepartmentContentroller::class, 'edit']);
+Route::get('/department/staffs', [DepartmentContentroller::class, 'getStaffs']);
 
 //privious ork wroute
 Route::get('/getall/PreviousWork', [PreviousWorkController::class, 'index']);
 Route::get('/edit/PreviousWork/{id}', [PreviousWorkController::class, 'edit']);
-
 
 
 

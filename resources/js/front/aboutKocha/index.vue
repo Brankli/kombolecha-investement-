@@ -3,21 +3,23 @@ import AboutKoch from "./AboutKoch.vue";
 </script>
 
 <template>
-    <div class="bg-white w-full pb-20 text-black">
-        <!-- Page Title -->
-        <h1 class="text-center p-4 text-4xl text-gray-800 mb-8 font-extrabold">
-            About Kombolcha
-        </h1>
+    <div class="bg-white w-full sm:w-[90%] mx-auto pb-20 text-black">
+        <header class="org-header text-center my-8">
+            <h3
+                class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-lime-600 to-emerald-500 text-black">
+                About Kombolcha
+            </h3>
+            <p class="mt-2 text-gray-500 text-sm md:text-base">
+                Read about kombolcha to discover opportunities
+            </p>
+        </header>
 
         <!-- Side-by-side Text + Image Section -->
         <div
             class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
         >
             <!-- Text Column -->
-            <div>
-                <h2 class="text-3xl font-bold text-sky-500 mb-4">
-                    Discover Kombolcha
-                </h2>
+            <div> 
                 <p class="text-lg text-gray-600 leading-relaxed">
                     Kombolcha, located in the northeastern part of Ethiopia, is
                     a rapidly developing industrial and commercial hub. With its
@@ -42,7 +44,7 @@ import AboutKoch from "./AboutKoch.vue";
                 <img
                     src="asset/images/Invest-kombolcha.png"
                     alt="Invest in Kombolcha"
-                    class="w-full h-80 object-contain"
+                    class="w-full   object-contain"
                 />
             </div>
         </div>
@@ -53,3 +55,19 @@ import AboutKoch from "./AboutKoch.vue";
         </div>
     </div>
 </template>
+
+<style scoped>
+.org-header h3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #84cc16, #10b981);
+    -webkit-background-clip: text;
+    color: transparent;
+    padding: 1rem 0;
+}
+
+.org-header p {
+    font-size: 1rem;
+    color: #6b7280;
+}
+</style>

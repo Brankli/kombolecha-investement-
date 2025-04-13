@@ -1,125 +1,115 @@
 <script setup>
-import axios from "axios";
-import { ref, onMounted } from "vue";
-import depProfile from "../components/depProfile.vue";
+import axios from 'axios';
+import { ref, onMounted } from 'vue'; 
 
-const departments = ref([]);
+import ourTeam from './ourTeam.vue';
+ 
 const services = ref([]);
+const visions = ref([]);
+const missions = ref([]);
+const goals = ref([]);
 
-onMounted(async () => {
-    try {
-        const deptRes = await axios.get("./api/getall/department");
-        departments.value = deptRes.data.DepartmentContent;
+onMounted(async()=>{
+    await axios.get('./api/getall/department').then(res => { 
+        visions.value = res.data.visions;
+        missions.value = res.data.missions;
+        goals.value = res.data.goals;
+ 
+        mineralDirector.value = res.data.mineralDirector;
+        expansionDirector.value = res.data.expansionDirector;
+        developmentDirector.value = res.data.developmentDirector;
+        departmentHead.value = res.data.departmentHead;
 
-        const serviceRes = await axios.get("./api/service/getall");
-        services.value = serviceRes.data.services;
-    } catch (error) {
-        console.error(error);
-    }
-});
+    }).catch(err => console.log(err));
+
+
+    await axios.get('./api/service/getall').then(res => {
+        services.value = res.data.services;
+    }).catch(err => console.log(err));
+
+})
 </script>
 
-<template>
-    <div
-        v-for="departmenthead in departments.data"
-        :key="departmenthead.id"
-        class="font-roboto"
-    >
-        <div v-if="departmenthead.position === 'deparment head'">
-            <!-- Hero Header -->
-            <div
-                class="w-full bg-gradient-to-r from-blue-900 to-sky-600 flex flex-col justify-center items-center text-white text-center px-4"
-            >
-                <h1
-                    class="text-3xl md:text-4xl font-bold drop-shadow-sm text-gray-800 pt-8"
-                >
-                    Kombolcha Investment Office
-                </h1>
-            </div>
+<template> 
+   <div class="">  
+    <header class="org-header text-center my-12">
+        <h3
+            class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-lime-600 to-emerald-500 text-black">
+            About us
+        </h3>
+        <p class="mt-2 text-gray-500 text-sm md:text-base">
+            About Kombolcha city industry and investment deparment.
+        </p>
+    </header>
 
-            <!-- Main Content Grid -->
-            <div
-                class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 p-6 sm:p-12"
-            >
-                <!-- Profile Card -->
-                <div>
-                    <depProfile
-                        :name="departmenthead.name"
-                        :position="departmenthead.position"
-                        :mobile="departmenthead.phone_no"
-                        :email="departmenthead.email"
-                        :profile="departmenthead.profile"
-                    />
+    <div class="w-[90%] lg:w-[80%] mx-auto my-8 mb-16">
+            <div >
+                <div class="w-full flex flex-col md:flex-row gap-8 mx-auto">
+                    <div class="flex border border-gray-300 rounded-lg p-4 flex-col">
+                        <h1 class="font-bold text-2xl py-6  text-blue-900">Our Vision</h1>
+                        <div >
+                            <div v-for="(vision, index) in visions" 
+                                :key="vision" 
+                                class="flex flex-row gap-2">
+                                <p>{{ index +1 }}.</p>
+                                <p class="font-roboto text-gray-500 p-1">{{ vision }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="images/vision.jpg" class="w-full md:w-[40%]  rounded-lg" alt="">
                 </div>
-
-                <!-- Vision, Mission, Goal Section -->
-                <div
-                    class="md:col-span-2 bg-white shadow-xl rounded-2xl p-8 space-y-12"
-                >
-                    <!-- VISION -->
-                    <div class="text-center space-y-4">
-                        <div class="flex justify-center">
-                            <img
-                                src="asset/images/binocular.png"
-                                class="w-20 h-20 rounded-full shadow-lg border-4 border-blue-200"
-                                alt="Vision"
-                            />
+                <div class="w-full flex flex-col md:flex-row py-16 gap-8 mx-auto">
+                    <img src="images/mission.jpg" class="w-full md:w-[40%] hidden md:flex  rounded-lg" alt="">
+                    <div class="flex border border-gray-300 rounded-lg p-4 flex-col">
+                        <h1 class="font-bold text-2xl py-6  text-blue-900">Our Mission</h1>
+                        <div >
+                            <div v-for="(mission, index) in missions" 
+                                :key="mission"
+                                class="flex flex-row gap-2">
+                                <p>{{ index +1 }}.</p>
+                                <p class="font-roboto text-gray-500 p-1">{{ mission }}</p>
+                            </div> 
                         </div>
-                        <h2
-                            class="text-3xl font-extrabold text-sky-600 tracking-wide"
-                        >
-                            Vision
-                        </h2>
-                        <p
-                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
-                        >
-                            {{ departmenthead.vission }}
-                        </p>
                     </div>
-
-                    <!-- MISSION -->
-                    <div class="text-center space-y-4">
-                        <div class="flex justify-center">
-                            <img
-                                src="asset/images/bulb.jpg"
-                                class="w-20 h-20 rounded-full shadow-lg border-4 border-red-200"
-                                alt="Mission"
-                            />
-                        </div>
-                        <h2
-                            class="text-3xl font-extrabold text-red-500 tracking-wide"
-                        >
-                            Mission
-                        </h2>
-                        <p
-                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
-                        >
-                            {{ departmenthead.mission }}
-                        </p>
-                    </div>
-
-                    <!-- GOAL -->
-                    <div class="text-center space-y-4">
-                        <div class="flex justify-center">
-                            <img
-                                src="asset/images/goal.png"
-                                class="w-20 h-20 rounded-full shadow-lg border-4 border-green-200"
-                                alt="Goal"
-                            />
-                        </div>
-                        <h2
-                            class="text-3xl font-extrabold text-green-600 tracking-wide"
-                        >
-                            Goal
-                        </h2>
-                        <p
-                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
-                        >
-                            {{ departmenthead.goal }}
-                        </p>
-                    </div>
+                    <img src="images/mission.jpg" class="w-full md:w-[40%] md:hidden rounded-lg" alt="">
                 </div>
-            </div>
+                <div class="w-full flex flex-col md:flex-row gap-8 mx-auto">
+                    <div class="flex border border-gray-300 rounded-lg p-4 flex-col">
+                        <h1 class="font-bold text-2xl py-6  text-blue-900">Our Goal</h1>
+                        <div >
+                            <div v-for="(goal, index) in goals" 
+                                :key="goal" 
+                                class="flex flex-row gap-2">
+                                <p>{{ index +1 }}.</p>
+                                <p class="font-roboto text-gray-500 p-1">{{ goal }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="images/goal.jpg" class=" w-full md:w-[40%] rounded-lg" alt="">
+                </div>
+            </div> 
         </div>
     </div>
+
+    <div class="my-16">
+        <ourTeam/>
+    </div>
 </template>
+
+<style scoped>
+.org-header h3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #84cc16, #10b981);
+    -webkit-background-clip: text;
+    color: transparent;
+    padding: 1rem 0;
+}
+
+.org-header p {
+    font-size: 1rem;
+    color: #6b7280;
+}
+</style>
+
+
