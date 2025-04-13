@@ -8,8 +8,7 @@ const isSticky = ref(false);
 const navHeight = ref(0);
 const navRef = ref(null);
 const placeholderRef = ref(null);
-
-// update navHeight after DOM is ready
+ 
 const updateNavHeight = () => {
     nextTick(() => {
         if (navRef.value) {
@@ -30,7 +29,7 @@ const handleScroll = () => {
 onMounted(() => {
     updateNavHeight();
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", updateNavHeight); // also handle resize
+    window.addEventListener("resize", updateNavHeight);  
 });
 
 onUnmounted(() => {
@@ -40,29 +39,22 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="bg-white w-full">
-        <!-- Top section hidden on small screens -->
+    <div class="bg-white w-full"> 
         <div class="hidden md:block">
             <socialMedia />
             <logo />
         </div>
-
-        <!-- Placeholder to track scroll -->
+ 
         <div ref="placeholderRef"></div>
-
-        <!-- Spacer to prevent layout shift -->
+ 
         <div :style="{ height: isSticky ? navHeight + 'px' : '0px' }"></div>
-
-        <!-- Sticky Navigation -->
-        <div
-            ref="navRef"
-            :class="[
-                'transition-all duration-300',
-                isSticky
-                    ? 'fixed top-0 left-0 w-full z-50 shadow-md bg-white'
-                    : '',
-            ]"
-        >
+ 
+        <div ref="navRef" :class="[
+            'transition-all duration-300',
+            isSticky
+                ? 'fixed top-0 left-0 w-full z-50 shadow-md bg-white'
+                : '',
+        ]">
             <navigation />
         </div>
     </div>

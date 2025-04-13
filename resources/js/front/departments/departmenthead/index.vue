@@ -3,8 +3,7 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue'; 
 
 import ourTeam from './ourTeam.vue';
- 
-const services = ref([]);
+  
 const visions = ref([]);
 const missions = ref([]);
 const goals = ref([]);
@@ -20,12 +19,7 @@ onMounted(async()=>{
         developmentDirector.value = res.data.developmentDirector;
         departmentHead.value = res.data.departmentHead;
 
-    }).catch(err => console.log(err));
-
-
-    await axios.get('./api/service/getall').then(res => {
-        services.value = res.data.services;
-    }).catch(err => console.log(err));
+    }).catch(err => console.log(err)); 
 
 })
 </script>
