@@ -84,19 +84,26 @@ const updateevent = async () => {
 </script>
 
 <template>
-  <name name="Edit Events and Announcements" />
-  <succs v-if="succ" :succ="succ" />
-  <errs v-if="err" :err="err" />
-  <div class="bg-gray-100 p-16">
-    <div class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100">
+  <div>
+    <div>
+      <name name="Edit Events and Announcements" />
+      <succs v-if="succ" :succ="succ" />
+      <errs v-if="err" :err="err" />
+      <div class="bg-gray-100 p-16"></div>
+    </div>
+    <div
+      class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100"
+    >
       <div class="w-full bg-white rounded-lg md:mt-0 xl:p-0">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 class="text-lg text-sky-700 leading-tight tracking-wide">
-            fill events or  announcements.
+            fill events or announcements.
           </h1>
 
           <div class="mb-6">
-            <label for="file" class="block mb-2 text-sm font-medium text-gray-900">Upload Image</label>
+            <label for="file" class="block mb-2 text-sm font-medium text-gray-900"
+              >Upload Image</label
+            >
             <input
               accept=".png,.jpg,.jpeg"
               type="file"
@@ -104,16 +111,28 @@ const updateevent = async () => {
               @change="selectImage"
               class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            <img v-if="selectedimagedata" :src="selectedimagedata" class="h-72 object-cover mt-4" alt="Preview" />
+            <img
+              v-if="selectedimagedata"
+              :src="selectedimagedata"
+              class="h-72 object-cover mt-4"
+              alt="Preview"
+            />
           </div>
 
           <div class="mb-6">
-            <label class="block mb-2 text-sm font-medium text-gray-900">Event Content</label>
-            <div ref="editorContainer" class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]"></div>
+            <label class="block mb-2 text-sm font-medium text-gray-900"
+              >Event Content</label
+            >
+            <div
+              ref="editorContainer"
+              class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]"
+            ></div>
           </div>
 
           <div class="mb-6">
-            <label for="info" class="block mb-2 text-sm font-medium text-gray-900">Read More Links</label>
+            <label for="info" class="block mb-2 text-sm font-medium text-gray-900"
+              >Read More Links</label
+            >
             <textarea
               id="info"
               v-model="event.info"
@@ -124,7 +143,9 @@ const updateevent = async () => {
           </div>
 
           <div class="mb-6">
-            <label for="type" class="block mb-2 text-sm font-medium text-gray-900">Sector</label>
+            <label for="type" class="block mb-2 text-sm font-medium text-gray-900"
+              >Sector</label
+            >
             <select
               v-model="event.type"
               class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -146,5 +167,4 @@ const updateevent = async () => {
   </div>
 </template>
 
-<style>
-</style>
+<style></style>

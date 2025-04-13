@@ -6,7 +6,6 @@ import { useRoute } from "vue-router";
 import name from "../../components/name.vue";
 import Quill from "quill";
 
-
 const route = useRoute();
 const id = ref(route.params.id);
 const news = ref({ title: "", content: "", info: "" });
@@ -16,7 +15,6 @@ const token = useLocalStorage("token", "");
 const imageUpload = ref(null);
 const selectedimagedata = ref("");
 
-
 const editorContainer = ref(null);
 let quillEditor = null;
 
@@ -24,7 +22,7 @@ onMounted(async () => {
   try {
     const res = await axios.get(`./api/news/edit/${id.value}`);
     news.value = res.data.news;
-    
+
     await nextTick();
     initializeEditor();
   } catch (error) {
@@ -32,10 +30,9 @@ onMounted(async () => {
   }
 });
 
-
 const initializeEditor = () => {
   if (!editorContainer.value) return;
-  
+
   quillEditor = new Quill(editorContainer.value, {
     theme: "snow",
     modules: {
@@ -54,12 +51,10 @@ const initializeEditor = () => {
     placeholder: "Write your news content here...",
   });
 
-  
   if (news.value.content) {
     quillEditor.root.innerHTML = news.value.content;
   }
 
-  
   quillEditor.on("text-change", () => {
     news.value.content = quillEditor.root.innerHTML;
   });
@@ -71,13 +66,11 @@ const selectImage = () => {
   selectedimagedata.value = URL.createObjectURL(selectedImage);
 };
 
-
 const update = async () => {
   const formData = new FormData();
   formData.append("title", news.value.title);
 
-
-  formData.append("content", news.value.content); 
+  formData.append("content", news.value.content);
 
   formData.append("info", news.value.info);
 
@@ -97,14 +90,22 @@ const update = async () => {
 </script>
 
 <template>
-  <name name="Edit News" />
-  <div class="bg-gray-100 p-16">
-    <div class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100">
+  <div>
+    <div>
+      <name name="Edit News" />
+      <div class="bg-gray-100 p-16">
+        <div
+          class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100"
+        ></div>
+      </div>
       <div class="w-full bg-white rounded-lg md:mt-0 xl:p-0">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
           <!-- Title Input -->
           <div class="mb-6">
-            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 capitalize">
+            <label
+              for="title"
+              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+            >
               News Article
             </label>
             <textarea
@@ -121,12 +122,19 @@ const update = async () => {
             <label class="block mb-2 text-sm font-medium text-gray-900 capitalize">
               News Content
             </label>
-            <div ref="editorContainer" class=" preview quil-editor border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]" v-html="content"></div>
+            <div
+              ref="editorContainer"
+              class="preview quil-editor border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]"
+              v-html="content"
+            ></div>
           </div>
 
           <!-- Image Upload -->
           <div class="mb-6">
-            <label for="file" class="block mb-2 text-sm font-medium text-gray-900 capitalize">
+            <label
+              for="file"
+              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+            >
               Upload Image for News
             </label>
             <input
@@ -139,11 +147,19 @@ const update = async () => {
           </div>
 
           <!-- Display selected image preview -->
-          <img v-if="selectedimagedata" :src="selectedimagedata" alt="Preview" class="max-w-full h-auto mb-4" />
+          <img
+            v-if="selectedimagedata"
+            :src="selectedimagedata"
+            alt="Preview"
+            class="max-w-full h-auto mb-4"
+          />
 
           <!-- Read More Links -->
           <div class="mb-6">
-            <label for="info" class="block mb-2 text-sm font-medium text-gray-900 capitalize">
+            <label
+              for="info"
+              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+            >
               Read More Links
             </label>
             <textarea
