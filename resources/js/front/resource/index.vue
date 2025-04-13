@@ -1,62 +1,85 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import sidbar from "../components/sidebar.vue"
-import resource from "./resource.vue";
+import Sidbar from "../components/sidebar.vue";
+import ResourceCard from "./resource.vue";
 import axios from "axios";
+
 const perPage = ref(7);
 const currentPage = ref(1);
-
 const resources = ref([]);
-onMounted(async () => {
-    await axios.get('./api/resource/getall').then(res => {
-        resources.value = res.data.resource;
-    }).catch(err => console.log(err));
-});
 
+onMounted(async () => {
+    try {
+        const res = await axios.get("/api/resource/getall");
+        resources.value = res.data.resource;
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 const paginatedData = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
-    const end = start + perPage.value;
-    return resources.value.slice(start, end);
+    return resources.value.slice(start, start + perPage.value);
 });
 
-const totalPages = computed(() => Math.ceil(resources.value.length / perPage.value));
-const prevPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value--;
-    }
-};
+const totalPages = computed(() =>
+    Math.ceil(resources.value.length / perPage.value)
+);
 
-const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
-        currentPage.value++;
-    }
-};
+function prevPage() {
+    if (currentPage.value > 1) currentPage.value--;
+}
+
+function nextPage() {
+    if (currentPage.value < totalPages.value) currentPage.value++;
+}
 </script>
 
 <template>
-    <div class="grid lg:grid-cols-6 m-16 ">
-        <div class="lg:col-span-4">
-            <h1 class="border-b-2 border-gray-200 text-2xl p-5 font-bold text-darkred">Resources</h1>
-            <p class="text-md p-4">You Can Download Our Resource as Pdf  </p>
-            <div v-for="resource in paginatedData" :key="resource">
-                <resource :resource="resource" />
+    <div class="grid lg:grid-cols-6 gap-6 p-3">
+        <!-- Main content -->
+        <section class="lg:col-span-4">
+            <h1
+                class="border-b-2 border-gray-200 text-2xl font-bold text-darkred mb-2"
+            >
+                Resources
+            </h1>
+            <p class="text-md mb-6">You Can Download Our Resource as PDF</p>
+
+            <div class="space-y-4">
+                <ResourceCard
+                    v-for="item in paginatedData"
+                    :key="item.id"
+                    :resource="item"
+                />
             </div>
-            <!-- pagination -->
-            <div class="w-full  bg-white mt-16 text-center">
-                <div class="flex flex-row gap-4 w-fit mx-auto">
-                    <button class="pagnations  hover:bg-gray-300 active:text-darkred" @click="prevPage"
-                        :disabled="currentPage === 1"> previous </button>
-                    <button class="pagnations  hover:bg-gray-300 active:text-darkred">{{ currentPage }}</button>
-                    <button class="pagnations  hover:bg-gray-300 active:text-darkred">...</button>
-                    <button class="pagnations  hover:bg-gray-300 active:text-darkred" @click="nextPage"
-                        :disabled="currentPage === totalPages">next</button>
+
+            <div class="w-full bg-white mt-8 py-4">
+                <div class="flex justify-center items-center gap-4">
+                    <button
+                        class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                        @click="prevPage"
+                        :disabled="currentPage === 1"
+                    >
+                        Previous
+                    </button>
+                    <span class="px-4 py-2 bg-gray-100 rounded">
+                        {{ currentPage }} / {{ totalPages }}
+                    </span>
+                    <button
+                        class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                        @click="nextPage"
+                        :disabled="currentPage === totalPages"
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
-            <!-- pagination -->
-        </div>
-        <div class="hidden lg:flex lg:col-span-2 md:m-8">
-            <sidbar />
-        </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:block lg:col-span-2">
+            <Sidbar />
+        </aside>
     </div>
 </template>

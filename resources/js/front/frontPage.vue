@@ -21,10 +21,11 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="">
+    <div>
         <headers />
-        <div>
+        <div class="w-full">
             <router-view />
+
             <footers />
         </div>
     </div>

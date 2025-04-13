@@ -1,78 +1,125 @@
 <script setup>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import depProfile from '../components/depProfile.vue';
+import axios from "axios";
+import { ref, onMounted } from "vue";
+import depProfile from "../components/depProfile.vue";
 
 const departments = ref([]);
 const services = ref([]);
 
-onMounted(async()=>{
-    await axios.get('./api/getall/department').then(res => {
-        departments.value = res.data.DepartmentContent;
-    }).catch(err => console.log(err));
-    await axios.get('./api/service/getall').then(res => {
-        services.value = res.data.services;
-    }).catch(err => console.log(err));
+onMounted(async () => {
+    try {
+        const deptRes = await axios.get("./api/getall/department");
+        departments.value = deptRes.data.DepartmentContent;
 
-})
+        const serviceRes = await axios.get("./api/service/getall");
+        services.value = serviceRes.data.services;
+    } catch (error) {
+        console.error(error);
+    }
+});
 </script>
 
 <template>
-    <div v-for="departmenthead in departments.data " :key="departmenthead.id" class="font-roboto">
+    <div
+        v-for="departmenthead in departments.data"
+        :key="departmenthead.id"
+        class="font-roboto"
+    >
         <div v-if="departmenthead.position === 'deparment head'">
-            <div class="  w-screen h-64 bg-darkblue ">
-                <div class="text-center  ">
-                    <h1 class="text-4xl font-bold p-16 font-roboto rounded-lg text-white">Kombolcha Investment office
-                    </h1>
-                    <div
-                        class="border-b-2 md:w-96 flex flex-row h-5  justify-between  text-gray-200 mx-auto border-gray-200">
-                        <div class="border-2 rounded-2xl  w-8 h-8">
-                            <div class="border-2 mx-auto  rounded-xl bg-white w-5 h-5"></div>
-                        </div>
-                        <div class="border-2 rounded-2xl  w-8 h-8">
-                            <div class="border-2 mx-auto  rounded-xl bg-blue-500 w-5 h-5"></div>
-                        </div>
-                        <div class="border-2 rounded-2xl  w-8 h-8">
-                            <div class="border-2 mx-auto  rounded-xl bg-white w-5 h-5"></div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Hero Header -->
+            <div
+                class="w-full bg-gradient-to-r from-blue-900 to-sky-600 flex flex-col justify-center items-center text-white text-center px-4"
+            >
+                <h1
+                    class="text-3xl md:text-4xl font-bold drop-shadow-sm text-gray-800 pt-8"
+                >
+                    Kombolcha Investment Office
+                </h1>
             </div>
-            <div class="grid md:grid-cols-3 sm:m-16">
-                <div class="md:col-span-1">
-                    <depProfile :name="departmenthead.name" :position="departmenthead.position"
-                        :mobile="departmenthead.phone_no" :email="departmenthead.email"
-                        :profile="departmenthead.profile" />
+
+            <!-- Main Content Grid -->
+            <div
+                class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 p-6 sm:p-12"
+            >
+                <!-- Profile Card -->
+                <div>
+                    <depProfile
+                        :name="departmenthead.name"
+                        :position="departmenthead.position"
+                        :mobile="departmenthead.phone_no"
+                        :email="departmenthead.email"
+                        :profile="departmenthead.profile"
+                    />
                 </div>
-                <div class="md:col-span-2 ">
-                    <div class=" text-white rounded-lg p-8">
-                        <div class="lg:flex  lg:flex-row gap-8 m-8">
-                            <div class="w-full">
-                                <img src="asset/images/binocular.png" class="w-16 h-16 mx-auto rounded-full" alt="">
-                                <h1 class="font-bold text-2xl text-center text-sky-500">Vision</h1>
-                                <p class="font-roboto text-yellow-600 text-center pt-4">{{ departmenthead.vission }}</p>
-                            </div>
+
+                <!-- Vision, Mission, Goal Section -->
+                <div
+                    class="md:col-span-2 bg-white shadow-xl rounded-2xl p-8 space-y-12"
+                >
+                    <!-- VISION -->
+                    <div class="text-center space-y-4">
+                        <div class="flex justify-center">
+                            <img
+                                src="asset/images/binocular.png"
+                                class="w-20 h-20 rounded-full shadow-lg border-4 border-blue-200"
+                                alt="Vision"
+                            />
                         </div>
-                        <div class="lg:flex  lg:flex-row gap-8 m-8">
-                            <div>
-                                <img src="asset/images/bulb.jpg" class="w-16 h-16 mx-auto rounded-full" alt="">
-                                <h1 class="font-bold text-2xl text-center text-red-500">Mission</h1>
-                                <p class="font-roboto text-yellow-600 text-center pt-4">{{ departmenthead.mission }}</p>
-                            </div>
-                        </div>
-                        <div class="lg:flex  lg:flex-row gap-8 m-8">
-                            <div>
-                                <img src="asset/images/goal.png" class="w-16 h-16 mx-auto rounded-full" alt="">
-                                <h1 class="font-bold text-2xl text-center text-green-500">Goal</h1>
-                                <p class="font-roboto text-yellow-600 text-center pt-4">{{ departmenthead.goal }}</p>
-                            </div>
-                        </div>
+                        <h2
+                            class="text-3xl font-extrabold text-sky-600 tracking-wide"
+                        >
+                            Vision
+                        </h2>
+                        <p
+                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
+                        >
+                            {{ departmenthead.vission }}
+                        </p>
                     </div>
-                <!-- service table -->
+
+                    <!-- MISSION -->
+                    <div class="text-center space-y-4">
+                        <div class="flex justify-center">
+                            <img
+                                src="asset/images/bulb.jpg"
+                                class="w-20 h-20 rounded-full shadow-lg border-4 border-red-200"
+                                alt="Mission"
+                            />
+                        </div>
+                        <h2
+                            class="text-3xl font-extrabold text-red-500 tracking-wide"
+                        >
+                            Mission
+                        </h2>
+                        <p
+                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
+                        >
+                            {{ departmenthead.mission }}
+                        </p>
+                    </div>
+
+                    <!-- GOAL -->
+                    <div class="text-center space-y-4">
+                        <div class="flex justify-center">
+                            <img
+                                src="asset/images/goal.png"
+                                class="w-20 h-20 rounded-full shadow-lg border-4 border-green-200"
+                                alt="Goal"
+                            />
+                        </div>
+                        <h2
+                            class="text-3xl font-extrabold text-green-600 tracking-wide"
+                        >
+                            Goal
+                        </h2>
+                        <p
+                            class="text-gray-700 text-md md:text-lg leading-relaxed text-start"
+                        >
+                            {{ departmenthead.goal }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
-
-

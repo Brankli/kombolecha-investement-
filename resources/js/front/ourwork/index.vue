@@ -1,126 +1,162 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
-
+import { ref, computed, onMounted, watch } from "vue";
 import ImageZoom from "./ImageZoom.vue";
-import Card from "./components/card.vue";
 import navigation from "./components/navigation.vue";
 
 const PreviousWorks = ref([]);
 const perPage = ref(10);
 const currentPage = ref(1);
-const keywords = ref('');
-const zoomImage = ref('');
+const keywords = ref("");
+const zoomImage = ref("");
+
+// reset page to 1 on any filter change
+watch(keywords, () => {
+    currentPage.value = 1;
+});
 
 const filteredWorks = computed(() => {
-    const keyword = keywords.value.toLowerCase();
-
-    if (keyword == '') {
-        return PreviousWorks.value;
-    } else {
-        return PreviousWorks.value.filter(item => item.category.toLowerCase() === keyword);
-    }
+    const kw = keywords.value.toLowerCase().trim();
+    return kw === ""
+        ? PreviousWorks.value
+        : PreviousWorks.value.filter((w) =>
+              w.category.toLowerCase().includes(kw)
+          );
 });
 
 const paginatedData = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
-    const end = start + perPage.value;
-    return filteredWorks.value.slice(start, end);
+    return filteredWorks.value.slice(start, start + perPage.value);
 });
 
-const totalPages = computed(() => Math.ceil(filteredWorks.value.length / perPage.value));
+const totalPages = computed(() =>
+    Math.ceil(filteredWorks.value.length / perPage.value)
+);
+
 const prevPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value--;
-    }
+    if (currentPage.value > 1) currentPage.value--;
 };
-
 const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
-        currentPage.value++;
-    }
+    if (currentPage.value < totalPages.value) currentPage.value++;
 };
- 
-const toggleFilter = (event) => {
-    keywords.value = event;
-}
 
-const zoomOut = (zoom) => {
-    zoomImage.value = zoomImage.value === '' ? zoom : '';
-}
+// desktop nav filter
+const toggleFilter = (cat) => {
+    keywords.value = cat;
+    currentPage.value = 1;
+};
+
+const zoomOut = (img) => {
+    zoomImage.value = zoomImage.value === "" ? img : "";
+};
 
 onMounted(async () => {
     try {
-        await axios.get('./api/getall/PreviousWork').then(res => {
-            PreviousWorks.value = res.data;
-        }).catch(err => console.log(err));
+        const { data } = await axios.get("./api/getall/PreviousWork");
+        PreviousWorks.value = data;
     } catch (err) {
         console.error(err);
     }
 });
-
 </script>
+
 <template>
-    <ImageZoom v-if="zoomImage" 
-        :zoomImage="zoomImage" 
-        @some-event="zoomOut" />
+    <ImageZoom v-if="zoomImage" :zoomImage="zoomImage" @some-event="zoomOut" />
 
-    <div class=" text-colorbackground mt-4  z-0">
-        <div class="">
-            <main class="px-4 py-6 bg-white ">
-                <header>
-                    <div>
-                        <div class=" z-0 ">
-                            <div class="text-center py-8">
-                                <h3 class="font-bold text-4xl"> Our Works </h3>
-                            </div>
+    <!-- guard horizontal overflow -->
+    <div class="bg-gray-50 min-h-screen text-gray-800 overflow-x-hidden">
+        <main class="max-w-7xl mx-auto px-4 py-10">
+            <!-- Header -->
+            <header class="text-center mb-8">
+                <h3
+                    class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-lime-600 to-emerald-500 text-black"
+                >
+                    Our Works
+                </h3>
+                <p class="mt-2 text-gray-500 text-sm md:text-base">
+                    Explore our projects across sectors
+                </p>
+            </header>
 
-                            <div class="sm:hidden block">
-                                <select v-model="keywords" name="time" id="time"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2 outline-none">
-                                    <option value="In agro processing sectors" class="hover:bg-slate-500">In agro
-                                        processing
-                                        sectors</option>
-                                    <option value="In chemical and construction sectors">In chemical and construction
-                                        sectors</option>
-                                    <option value="In the hotel and tourism sector">In the hotel and tourism sector
-                                    </option>
-                                    <option value="Construction sectors">Construction sectors</option>
-                                    <option value="Urban agriculture sector">Urban Agriculture Sector</option>
-                                    <option value="Social sectorr">Social Sector</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <navigation 
-                            class="hidden md:flex" 
-                            @some-event="toggleFilter" />
+            <!-- Mobile Filter -->
+            <div class="md:hidden mb-6 px-4 overflow-x-hidden">
+                <select
+                    v-model="keywords"
+                    class="w-11/12 mx-auto block rounded-xl border border-gray-300 p-3 text-gray-700 shadow-sm focus:ring-2 focus:ring-lime-600 focus:outline-none"
+                >
+                    <option disabled value="">Select a category…</option>
+                    <option>In agro processing sectors</option>
+                    <option>In chemical and construction sectors</option>
+                    <option>In the hotel and tourism sector</option>
+                    <option>Construction sectors</option>
+                    <option>Urban agriculture sector</option>
+                    <option>Social sectorr</option>
+                </select>
+            </div>
 
-                        <div class="my-12 flex flex-wrap lg:w-[90%] items-center justify-center gap-4 mx-auto">
-                            <div v-for="work in paginatedData" 
-                                :key="work.id" 
-                                class="flex-grow max-w-[350px] group relative overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 cursor-pointer portfolio-item">
-                                <Card 
-                                    :work="work"
-                                    @click.prevent="zoomOut(work.image)" />
-                            </div>
-                        </div>
+            <!-- Desktop Filter -->
+            <navigation
+                class="hidden md:flex justify-center mb-6"
+                @some-event="toggleFilter"
+            />
+
+            <!-- Grid Cards with hover‑overlay -->
+            <div
+                class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+                <div
+                    v-for="work in paginatedData"
+                    :key="work.id"
+                    class="relative bg-white rounded-2xl shadow-md transform hover:scale-105 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group"
+                    @click.prevent="zoomOut(work.image)"
+                >
+                    <!-- image -->
+                    <img
+                        :src="work.image"
+                        alt=""
+                        class="w-full h-48 object-cover"
+                    />
+
+                    <!-- title area -->
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            {{ work.title }}
+                        </h3>
                     </div>
 
-                </header>
-                <!-- pagination -->
-                <div class="w-full  bg-white mt-16 text-center">
-                    <div class="flex flex-row gap-4 w-fit mx-auto">
-                        <button class="pagnations  hover:bg-gray-300 active:text-darkred" @click="prevPage"
-                            :disabled="currentPage === 1"> previous </button>
-                        <button class="pagnations  hover:bg-gray-300 active:text-darkred">{{ currentPage }}</button>
-                        <button class="pagnations  hover:bg-gray-300 active:text-darkred">...</button>
-                        <button class="pagnations  hover:bg-gray-300 active:text-darkred" @click="nextPage"
-                            :disabled="currentPage === totalPages">next</button>
+                    <!-- overlay on hover -->
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                        <span class="text-white text-base">
+                            {{ work.category }}
+                        </span>
                     </div>
                 </div>
-                <!-- pagination -->
-            </main>
-        </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-12 flex justify-center items-center gap-4 text-sm">
+                <button
+                    @click="prevPage"
+                    :disabled="currentPage === 1"
+                    class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                >
+                    Previous
+                </button>
+
+                <span class="font-semibold text-lime-700">
+                    Page {{ currentPage }} of {{ totalPages }}
+                </span>
+
+                <button
+                    @click="nextPage"
+                    :disabled="currentPage === totalPages"
+                    class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                >
+                    Next
+                </button>
+            </div>
+        </main>
     </div>
 </template>
