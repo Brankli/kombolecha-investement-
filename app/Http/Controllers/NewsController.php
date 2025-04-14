@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NewsREsource;
 use App\Models\News;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -20,7 +21,7 @@ class NewsController extends Controller
                 return response()->json(['message' => 'No news found'], 404);
             }
 
-            return response()->json($newses);
+            return response()->json(NewsREsource::collection($newses));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch news'], 500);
         }catch(ModelNotFoundException $e) {
@@ -33,7 +34,13 @@ class NewsController extends Controller
         try {
             $news = News::findOrFail($id);
 
-            return response()->json(['news' => $news], 200);
+            if (!$news) {
+                return response()->json(['message' => 'No news found'], 404);
+            }
+
+            return response()->json([
+                'news' => new NewsREsource($news),
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No news found with this ID'], 404);
         } catch (\Exception $e) {
@@ -82,15 +89,15 @@ class NewsController extends Controller
 
     public function edit($id)
     {
-        try {
-            $news = News::findOrFail($id);
+        $news = News::findOrFail($id);
 
-            return response()->json(['news' => $news], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'No news found with this ID'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch news'], 500);
+        if (!$news) {
+            return response()->json(['message' => 'No news found'], 404);
         }
+
+        return response()->json([
+            'news' => new NewsREsource($news),
+        ]);
     }
 
 

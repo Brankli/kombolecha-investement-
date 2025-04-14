@@ -12,11 +12,11 @@ const formatDate = (isoDateString) => {
 <template>
         <router-link :to="{ name: 'getnewsDetail', params: { id: props.news.id } }" >
     <div>
-        <div class=" flex flex-row mb-5 hover:bg-gray-100 hover:border-l-4 ml-4 hover:border-l-darkred">
-            <img :src="props.news.image" class="  w-24 h-24 ml-1 object-cover" alt="">
+        <div class=" flex flex-row mb-5 hover:bg-gray-100 ml-4 ">
+            <img :src="props.news.image" class="  w-20 h-20 ml-1 rounded-sm object-cover" alt="">
             <div class="">
-                <p class="pl-4 text-sm font-roboto  tracking-wider text-gray-800">{{ props.news.title }}</p>
-                <p class="p-1 pl-4 text-sm text-gray-500">{{ formatDate(props.news.created_at) }}</p>
+                <h1 class="pl-4 text-md font-bold font-roboto text-gray-800">{{ props.news.title }}</h1>
+                <p class="py-2 pl-4 text-sm font-normal text-blue-800">{{ props.news?.published_date  }}, {{ props.news?.published_at  }} </p>
             </div>
         </div>
     </div>

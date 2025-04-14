@@ -1,41 +1,44 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\EventREsource;
 use App\Models\AnnouncEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Console\Scheduling\Event;
+
 class EventController extends Controller
 { 
     public function index()
     {
-        try {
-            $events = AnnouncEvent::orderBy('id', 'desc')->where('hidden','yes')->get();
+        $events = AnnouncEvent::orderBy('id', 'desc')->where('hidden', 'yes')->get();
 
-            if ($events->isEmpty()) {
-                return response()->json(['message' => 'No event or announcement found'], 404);
-            }
-
-            return response()->json(['events' => $events], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch event or announcement'], 500);
+        if ($events->isEmpty()) {
+            return response()->json(['message' => 'No event or announcement found'], 404);
         }
+
+        return response()->json([
+            'events' => EventREsource::collection($events),
+        ]);
     }
 
     public function show($id)
     {
-        try {
-            $event = AnnouncEvent::findOrFail($id);
+        $event = AnnouncEvent::findOrFail($id);
 
-            return response()->json(['event' => $event], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'No news found with this ID'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch news'], 500);
+        if (!$event) {
+            return response()->json(['message' => 'No event found'], 404);
         }
+
+        return response()->json([
+            'event' => new EventREsource($event),
+        ]);
     }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -76,22 +79,19 @@ class EventController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        try {
-            $event = AnnouncEvent::findOrFail($id);
+    public function edit($id) {
+        $event = AnnouncEvent::findOrFail($id);
 
-            return response()->json(['event' => $event], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'No events found with this ID'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch events'], 500);
-        } catch(ModelNotFoundException $e) {
-            return response()->json(['error'=> 'server error'], 500);
+        if (!$event) {
+            return response()->json(['message' => 'No event found'], 404);
         }
+
+        return response()->json([
+            'event' => new EventREsource($event),
+        ]);
     }
-    public function update(Request $request, $id)
-    {
+
+    public function update(Request $request, $id) {
             $event = AnnouncEvent::findOrFail($id);
 
             $validator = Validator::make($request->all(), [

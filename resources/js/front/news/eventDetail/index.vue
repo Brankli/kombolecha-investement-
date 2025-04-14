@@ -1,6 +1,4 @@
-<script setup>
-import sidebar from "../../components/sidebar.vue";
-import eventcontact from "./eventcontact.vue";
+<script setup> 
 import { format, parseISO } from "date-fns";
 import axios from "axios";
 import { onMounted, ref } from "vue";
@@ -37,61 +35,40 @@ const goBack = () => {
 </script>
 
 <template>
-    <div class="bg-white font-roboto text-colorbackground">
-        <div class="grid md:grid-cols-8">
+    <div class="bg-white font-roboto text-colorbackground  overflow-hidden sm:w-[80%] mx-auto">
+        <div class="">
             <main class="px-4 sm:px-16 py-6 bg-white md:col-span-5">
                 <header>
                     <!-- Back Button -->
-                    <div
-                        class="flex items-center space-x-2 text-gray-700 cursor-pointer hover:text-gray-900"
-                        @click="goBack"
-                    >
+                    <div class="flex items-center my-8 space-x-2 text-gray-700 cursor-pointer hover:text-gray-900"
+                        @click="goBack">
                         <i class="fas fa-arrow-left text-xl"></i>
                         <span class="text-sm font-medium">Back</span>
                     </div>
 
                     <div>
-                        <h4
-                            class="font-light pb-2 mt-12 border-b border-gray-200"
-                        ></h4>
-                        <h2 class="text-3xl text-gray-700 p-2 font-bold">
+                        <h2 class="text-4xl text-gray-700 capitalize font-bold">
                             {{ event.type }}
+                            <p class="py-2 text-sm font-normal text-gray-500">{{ event?.published_date  }}, {{ event?.published_at  }} </p> 
                         </h2>
 
-                        <!-- Event Image -->
-                        <div
-                            class="mt-8 bg-newsbackground grid lg:grid-cols-1 md:gap-10"
-                        >
-                            <div class="card mx-auto hover:shadow-lg">
-                                <img
-                                    :src="event.image"
-                                    class="max-h-96 object-auto"
-                                    alt=""
-                                />
+                        <!-- Event Image --> 
+                        <div class="mt-8">
+                            <div class="mx-auto">
+                                <img :src="event.image" class="w-full mx-auto object-contain " alt="" />
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-5 mt-8">
-                            <div class="col-span-5 p-2 text-md text-gray-800">
-                                <div
-                                    v-for="announcement in eventparagraph"
-                                    :key="announcement"
-                                >
-                                    <p>{{ announcement }}</p>
+                        <!-- Content -->
+                        <div class="my-8">
+                            <div class="text-md text-gray-800">
+                                <div  class="preview ql-editor"  v-html="event?.event"> 
                                 </div>
                             </div>
-                        </div>
+                        </div> 
                     </div>
                 </header>
             </main>
-
-            <!-- Sidebar + Contact -->
-            <div class="md:col-span-2 text-left">
-                <div class="hidden md:flex mt-16">
-                    <sidebar />
-                </div>
-                <eventcontact :info="info" />
-            </div>
         </div>
     </div>
 </template>
