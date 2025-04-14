@@ -7,6 +7,17 @@
     const expansionDirector = ref(null);
     const developmentDirector = ref(null);
 
+    const staffs = ref([]);
+
+    function getAllStaff() {
+        axios
+            .get(`/api/staff/getall`)
+            .then((res) => {
+                staffs.value = res.data.data;
+            })
+            .catch((err) => console.log(err));
+    }
+
     onMounted(async()=>{
         await axios.get('./api/department/staffs').then(res => {  
             mineralDirector.value = res.data.mineralDirector;
@@ -15,6 +26,8 @@
             departmentHead.value = res.data.departmentHead;
 
         }).catch(err => console.log(err));
+
+        getAllStaff();
     })
 </script>
 
@@ -167,12 +180,11 @@
             <h3 class="workers-title text-2xl font-bold text-blue-900 my-4">Our Staffs</h3>
             <div class="workers-grid my-16">
                 <!-- Generate 22 worker cards -->
-                <div v-for="n in 10" :key="n" class="relative group">
-                    <img src="DepartmentContentLogo/1707201668.jpg" alt="Worker"
-                        class="w-24 h-24 rounded-full object-cover mx-auto" />
-                    <!-- Overlay with worker name -->
+                <div v-for="(staff, index) in staffs" :key="index" class="relative group">
+                    <img :src="staff.image" alt="Worker"
+                        class="w-24 h-24 rounded-full object-cover mx-auto" /> 
                     <div class="text-center mt-2">
-                        <h2 class="text-blue-900 text-sm font-normal">Worker Name</h2>
+                        <h2 class="text-blue-900 text-sm font-normal">{{ staff.name }}</h2>
                     </div>
                 </div>
             </div>

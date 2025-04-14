@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -19,7 +21,7 @@ class UserController extends Controller
                 return response()->json(['message' => 'No user found'], 404);
             }
 
-            return response()->json($user);
+            return response()->json(UserResource::collection($user));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch user'], 500);
         }
@@ -29,7 +31,9 @@ class UserController extends Controller
         try {
             $user = Auth::user();
 
-            return response()->json(['user' => $user], 200);
+            return response()->json([
+                'user' => new UserResource($user)
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'not found with this ID'], 404);
         } catch (\Exception $e) {
@@ -53,16 +57,20 @@ class UserController extends Controller
                 return response()->json(['error' => $validator->errors()], 422);
             }
             $user->name = $request->name;
-            $user->phone_no = $request->phone_no;
-
+            $user->phone_no = $request->phone_no; 
+ 
             if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('ProfileImage'), $image);
-                $user->image ='ProfileImage/' . $image;
-            } 
+                Storage::disk('public')->delete($user->image);
+
+                $image = $request->file('image');
+                $filePath = $image->store('portfolio', 'public');
+                $user->image = $filePath;
+            }
 
             if($user->save()){
-                return response()->json(['message' => 'profile updated successfully'], 201);
+                return response()->json([
+                    'message' => 'profile updated successfully'
+                ], 201);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create previous work'], 500);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SponserResource;
 use App\Models\Sponser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -22,7 +23,7 @@ class SponserController extends Controller
                 return response()->json(['message' => 'No Sponsor found'], 404);
             }
 
-            return response()->json($sponsers);
+            return response()->json(SponserResource::collection($sponsers));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch Sponsor'], 500);
         }catch(ModelNotFoundException $e){
@@ -41,28 +42,22 @@ class SponserController extends Controller
        $validations =  Validator::make($request->all(), [
             'CompanyName' => 'required|unique:previous_works|max:255',
             'image' => 'required|mimes:jpeg,png,jpg|max:51200',
-        ]);
+        ]); 
 
-        
-        $user=auth::user();
-        // dd($user);
         try{
+            $filePath = null;
             if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('PreviousWorkImage'), $image);
-                $image_src = 'PreviousWorkImage/'.$image;
-
-                $sponsers = $admin->sponsers()->create([
-                    'CompanyName' => $request->CompanyName,
-                    'image' => $image_src,
-                    // 'author_id' => $user->id,
-                    'created_at' => Carbon::now(),
-                ]);
-
-                return response()->json(['message' => 'new sponser added successfully'], 201);
-            } else {
-                return response()->json(['message' => 'Please upload image'], 422);
+                $image = $request->file('image');
+                $filePath = $image->store('sponsors', 'public');
             }
+
+            $sponsers = $admin->sponsers()->create([
+                'CompanyName' => $request->CompanyName,
+                'image' => $filePath,
+                'created_at' => Carbon::now(),
+            ]);
+
+            return response()->json(['message' => 'new sponsor added successfully'], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create sponsor '], 500);
         }catch(ModelNotFoundException $e){

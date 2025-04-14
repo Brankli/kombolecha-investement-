@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "npx mix",
-        "watch": "npx mix watch"
+        "watch": "npx mix watch",
+       "prod": "mix --production"
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.16",

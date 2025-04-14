@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DepartmentResource;
 use App\Models\DepartmentContent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class DepartmentContentroller extends Controller
@@ -22,7 +24,7 @@ class DepartmentContentroller extends Controller
         $goals = DepartmentContent::pluck('goal'); 
 
         return response()->json([
-            'departmentContents'  => $departmentContents,
+            'departmentContents'  => DepartmentResource::collection($departmentContents),
             'visions'             => $visions,
             'missions'            => $missions,
             'goals'               => $goals, 
@@ -34,7 +36,9 @@ class DepartmentContentroller extends Controller
         try {
             $DepartmentContent = DepartmentContent::findOrFail($id);
 
-            return response()->json(['DepartmentContent' => $DepartmentContent], 200);
+            return response()->json([
+                'DepartmentContent' => new DepartmentResource($DepartmentContent),
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No DepartmentContent found with this ID'], 404);
         } catch (\Exception $e) {
@@ -68,13 +72,18 @@ class DepartmentContentroller extends Controller
 
 
             if ($request->hasFile('profile')) {
-                $profile = time() . '.' . $request->profile->extension();
-                $request->profile->move(public_path('DepartmentContentLogo'), $profile);
 
-                $DepartmentContent->profile = 'DepartmentContentLogo/' . $profile;
+                Storage::disk('public')->delete($DepartmentContent->profile);
+
+                $image = $request->file('profile');
+                $filePath = $image->store('staff', 'public');
+
+                $DepartmentContent->profile =  $filePath;
             } 
+
             if($DepartmentContent->save()){
-                return response()->json(['message' => 'DepartmentContent updated successfully'], 200);
+                return response()->json(['message' => 'DepartmentContent updated successfully'
+            ]);
             }else{
                 return response()->json(['message'=> 'department not updated'], 500);
             }
@@ -100,10 +109,10 @@ class DepartmentContentroller extends Controller
 
         return response()->json([ 
 
-            'departmentHead'      => $departmentHead,
-            'mineralDirector'     => $mineralDirector,
-            'expansionDirector'   => $expansionDirector,
-            'developmentDirector' => $developmentDirector,
+            'departmentHead'      => new DepartmentResource($departmentHead),
+            'mineralDirector'     => new DepartmentResource($mineralDirector),
+            'expansionDirector'   => new DepartmentResource($expansionDirector),
+            'developmentDirector' => new DepartmentResource($developmentDirector),
         ]);
     }
 }

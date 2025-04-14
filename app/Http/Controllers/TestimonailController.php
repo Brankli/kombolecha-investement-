@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TestimonialResource;
 use App\Models\Testimonail;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,7 +22,7 @@ class TestimonailController extends Controller
                 return response()->json(['message' => 'No testimonail found'], 404);
             }
 
-            return response()->json($testimonails);
+            return response()->json(TestimonialResource::collection($testimonails));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch testimonail'], 500);
         }catch(ModelNotFoundException $e){
@@ -45,22 +46,21 @@ class TestimonailController extends Controller
 
 
         try {
+
+            $filePath = null;
             if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('PreviousWorkImage'), $image);
-                $image_src = 'PreviousWorkImage/'.$image;
-
-                $testimonails = $admin->testimonail()->create([
-                    'Name' => $request->Name,
-                    'discribution' =>$request->discribution,
-                    'image' => $image_src,
-                    'created_at'=>Carbon::now(),
-                ]);
-
-                return response()->json(['message' => 'new testimonial added successfully'], 201);
-            } else {
-                return response()->json(['message' => 'Please upload image'], 422);
+                $image = $request->file('image');
+                $filePath = $image->store('testimonials', 'public');
             }
+
+            $testimonails = $admin->testimonail()->create([
+                'Name' => $request->Name,
+                'discribution' =>$request->discribution,
+                'image' => $filePath,
+                'created_at'=>Carbon::now(),
+            ]);
+
+            return response()->json(['message' => 'new testimonial added successfully'], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create testimonail '], 500);
         }catch(ModelNotFoundException $e){
@@ -77,7 +77,7 @@ class TestimonailController extends Controller
             $gettestimonail->updated_at = Carbon::now();
             $gettestimonail->save();
         }
-        return response()->json(['message'=> 'The testimonail is removed'], 200);
+        return response()->json(['message'=> 'The testimonail is removed']);
        } catch (ModelNotFoundException $e) {
         return response()->json(['message'=> 'server error'], 404);
        }catch (\Exception $e) {

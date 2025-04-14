@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class EventREsource extends JsonResource
+class TestimonialResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,15 +17,8 @@ class EventREsource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'author_id' => $this->author_id,
-            'hidden' => $this->hidden,
-            'event' => $this->event, 
-            'type' => $this->type,
-            'info' => $this->info,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'published_date' => $this->created_at->format('l, d-m-Y'),
-            'published_at' => $this->created_at->diffForHumans(),
+            'Name' => $this->Name, 
+            'discribution' => $this->discribution, 
 
             'image' => $this->image ? Storage::disk('public')->url($this->image) : null,
         ];

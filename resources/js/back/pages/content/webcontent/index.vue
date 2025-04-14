@@ -8,10 +8,11 @@ const departments = ref([]);
 onMounted(async () => {
     await axios.get('./api/getall/content').then(res => {
         contents.value = res.data.WebContents;
-    }).catch(err => console.log(err));
+    }).catch(err => {});
+
     await axios.get('./api/getall/department').then(res => {
-        departments.value = res.data.DepartmentContent;
-    }).catch(err => console.log(err));
+        departments.value = res.data.departmentContents;
+    }).catch(err => {});
 });
 </script>
 
@@ -130,7 +131,7 @@ onMounted(async () => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody v-for="department in departments.data" :key="department.id">
+                        <tbody v-for="department in departments" :key="department.id">
                             <tr class="bg-white border-b hover:bg-gray-50">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     <img :src="department.profile" class="h-10 w-10 object-cover" alt="profile">
@@ -152,7 +153,7 @@ onMounted(async () => {
                                     {{ department.mission.slice(0, 10) }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ department.vission.slice(0, 10) }}
+                                    {{ department.vision.slice(0, 10) }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ department.goal.slice(0, 10) }}

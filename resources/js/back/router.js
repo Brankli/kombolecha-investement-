@@ -28,6 +28,9 @@ import testimonial from "./pages/testimonies/create.vue";
 import newtestimonial from "./pages/testimonies/index.vue";
 import banner from "./pages/banner/create.vue";
 import newbanner from "./pages/banner/index.vue";
+import staff from "./pages/staff/index.vue"
+import newstaff from "./pages/staff/create.vue"
+
 
 //front routes
 import frontPage from "../front/frontPage.vue"
@@ -190,6 +193,16 @@ const routes = [
                 path: "/newbanner",
                 name: "newbanner",
                 component: newbanner,
+            },
+            {
+                path: "/staff",
+                name: "staff",
+                component: staff,
+            },
+            {
+                path: "/newstaff",
+                name: "newstaff",
+                component: newstaff,
             },
         ],
         meta: {

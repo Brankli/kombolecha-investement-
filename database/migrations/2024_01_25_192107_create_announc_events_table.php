@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image')->unique();
             $table->string('type');
             $table->string('hidden')->default('yes');
+            $table->text('info')->default('');
              $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -14,6 +14,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SponserController;
+use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TestimonailController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisitorController;
@@ -81,16 +82,18 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/sponser/hidden', [SponserController::class, 'hidden']);
 
     //testimoniyals route
-    Route::post('/store/testimonial',[TestimonailController::class,'store']);
-   Route::post('/testimonial/hidden',[TestimonailController::class,'hidden']);
-   Route::put('/testimonials/{id}/hidden', [TestimonailController::class, 'updateHidden']);
+    Route::post('/store/testimonial', [TestimonailController::class, 'store']);
+    Route::post('/testimonial/hidden', [TestimonailController::class, 'hidden']);
+    Route::put('/testimonials/{id}/hidden', [TestimonailController::class, 'updateHidden']);
 
 
-   //banner api
-   Route::post('/store/banner',[BannerController::class,'store']);
-Route::post('/banner/hidden',[BannerController::class,'hidden']);
+    //banner api
+    Route::post('/store/banner', [BannerController::class, 'store']);
+    Route::post('/banner/hidden', [BannerController::class, 'hidden']);
+
+    Route::post('/staff', [StaffController::class, 'store']);
+    Route::delete('/staff/deletes/{id}', [StaffController::class, 'destroy']);
 });
-
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -150,8 +153,9 @@ Route::post('/subscriber/store', [SubscriptionController::class, 'store']);
 Route::get('/getall/sponser', [SponserController::class, 'index']);
 
 //tesimonials
-Route::get('/getall/testimonial',[TestimonailController::class,'index']);
+Route::get('/getall/testimonial', [TestimonailController::class, 'index']);
 
 //banner route
 
-Route::get('/getall/banner',[BannerController::class,'index']);
+Route::get('/getall/banner', [BannerController::class, 'index']);
+Route::get('/staff/getall', [StaffController::class, 'index']);

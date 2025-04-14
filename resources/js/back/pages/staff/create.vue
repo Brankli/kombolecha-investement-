@@ -30,7 +30,7 @@ const addStaff = () => {
 
   axios.defaults.headers.common["Authorization"] = token.value;
   axios
-    .post(`./api/sstaff`, formData)
+    .post(`./api/staff`, formData)
     .then((res) => {
       alertstore.showSuccessToast(res.data.message);
       setTimeout(() => {

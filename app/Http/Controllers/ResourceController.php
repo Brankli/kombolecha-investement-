@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\MaterialResource;
 use App\Models\Resource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -10,19 +12,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ResourceController extends Controller
 {
-        public function index()
-    {
-        try {
-            $Resource = Resource::orderBy('id', 'desc')->where('hidden','yes')->get();
+        public function index() {
+        $Resource = Resource::orderBy('id', 'desc')->where('hidden', 'yes')->get();
 
-            if ($Resource->isEmpty()) {
-                return response()->json(['error' => 'No Resource found'], 404);
-            }
-
-            return response()->json(['resource' => $Resource], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch Resource'], 500);
+        if ($Resource->isEmpty()) {
+            return response()->json(['error' => 'No Resource found'], 404);
         }
+
+        return response()->json([
+            'resource' => MaterialResource::collection($Resource),
+        ]);
     }
 
         public function store(Request $request)
@@ -37,28 +36,18 @@ class ResourceController extends Controller
             'resource' => 'required|mimes:jpeg,png,jpg,pdf,doc,txt',
         ]);
 
-        
-        // try {
-            if ($request->hasFile('resource')) {
-                $image = time() . '.' . $request->resource->extension();
-                $request->resource->move(public_path('Resource'), $image);
-                $image_src = 'Resource/'.$image;
+        $filePath = null;
+        if ($request->hasFile('resource')) {
+            $resource = $request->file('resource');
+            $filePath = $resource->store('resource', 'public');
+        }
 
-                $resource = $admin->resources()->create([
-                    'resource'=>$image_src,
-                    'title'=> $request->title,
-                ]);
+        $resource = $admin->resources()->create([
+            'resource'=> $filePath,
+            'title'=> $request->title,
+        ]);
 
-                return response()->json(['message' => 'your resource uploaded successfully'], 200);
-            } else {
-                return response()->json(['error' => 'Please upload file'], 422);
-            }
-        // }catch (ModelNotFoundException $e) {
-        //     return response()->json(['error' => 'model exception error'], 500);
-        // }
-        // catch (\Exception $e) {
-        //     return response()->json(['error' => 'Failed to upload the file please try again'], 500);
-        // }
+        return response()->json(['message' => 'your resource uploaded successfully']);
     }
     
 
@@ -69,7 +58,7 @@ class ResourceController extends Controller
 
             $Resource->delete();
 
-            return response()->json(['message' => 'noteBook deleted successfully'], 200);
+            return response()->json(['message' => 'noteBook deleted successfully']);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'No noteBook found '], 404);
         } catch (\Exception $e) {
@@ -85,7 +74,7 @@ class ResourceController extends Controller
             $getresource->hidden = 'no';
             $getresource->save();
         }
-        return response()->json(['message'=> 'the noteBook is dleted'], 200);
+        return response()->json(['message'=> 'the noteBook is dleted']);
        } catch (ModelNotFoundException $e) {
         return response()->json(['error'=> 'server error'], 404);
        }catch (\Exception $e) {

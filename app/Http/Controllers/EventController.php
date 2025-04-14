@@ -7,9 +7,8 @@ use App\Models\AnnouncEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Console\Scheduling\Event;
+use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 { 
@@ -53,25 +52,22 @@ class EventController extends Controller
         }
 
 
-        try {
-            
+        try { 
+            $filePath = null;
             if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('EventsImage'), $image);
+                $image = $request->file('image');
+                $filePath = $image->store('event', 'public');
+            }
 
-                $storeevent = new AnnouncEvent;
-                $storeevent->author_id = Auth::user()->id;
-                $storeevent->event = $request->event;
-                $storeevent->type = $request->type;
-                $storeevent->image =  'EventsImage/'.$image;
-                $storeevent->info = $request->info;
-                if($storeevent->save()){
-                    return response()->json(['message' => 'event created successfully'], 201);
-                }
+            $storeevent = new AnnouncEvent;
+            $storeevent->author_id = Auth::user()->id;
+            $storeevent->event = $request->event;
+            $storeevent->type = $request->type;
+            $storeevent->image = $filePath;
+            $storeevent->info = $request->info;
 
-                
-            } else {
-                return response()->json(['error' => 'Image is required'], 422);
+            if($storeevent->save()){
+                return response()->json(['message' => 'event created successfully'], 201);
             }
         } catch(ModelNotFoundException $e) {
             return response()->json(['error'=> 'server error'], 500);
@@ -110,13 +106,14 @@ class EventController extends Controller
                 $event->type = $request->type;
                 $event->info = $request->info;
 
-            $event->update($request->except('image'));
             if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('EventsImage'), $image);
+                Storage::disk('public')->delete($event->image);
+                $image = $request->file('image');
+                $filePath = $image->store('event', 'public');
 
-                $event->image =  'EventsImage/'.$image;
+                $event->image = $filePath;
             }
+ 
             if($event->save()){
                     return response()->json(['message' => 'event created successfully'], 201);
                 }

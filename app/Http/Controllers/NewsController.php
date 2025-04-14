@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
@@ -65,25 +66,20 @@ class NewsController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        // try {
-            if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('NewsImage'), $image);
+        $filePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filePath = $image->store('news', 'public');
+        }
+        
+        $news = $admin->news()->create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'info'=>$request->info,
+            'image' => $filePath,
+        ]);
 
-                $news = $admin->news()->create([
-                    'title' => $request->title,
-                    'content' => $request->content,
-                    'info'=>$request->info,
-                    'image' => 'NewsImage/' . $image,
-                ]);
-
-                return response()->json(['message' => 'News created successfully'], 201);
-            } else {
-                return response()->json(['error' => 'Image is required'], 422);
-            }
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => 'Failed to create news'], 500);
-        // }
+        return response()->json(['message' => 'News created successfully'], 201);
     }
 
 
@@ -115,13 +111,14 @@ class NewsController extends Controller
             try {
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 422);
-            }
-            $news->update($request->except('image'));
-            if ($request->hasFile('image')) {
-                $image = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('NewsImage'), $image);
+            } 
 
-                $news->update(['image' => 'NewsImage/' . $image]);
+            if ($request->hasFile('image')) {
+                Storage::disk('public')->delete($news->image);
+                $image = $request->file('image');
+                $filePath = $image->store('news', 'public'); 
+
+                $news->update(['image' => $filePath]);
             }
 
             return response()->json(['message' => 'News updated successfully'], 200);
