@@ -25,10 +25,9 @@ onMounted(async()=>{
 </script>
 
 <template> 
-   <div class="">  
+   <div class=""> 
     <header class="org-header text-center my-12">
-        <h3
-            class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-lime-600 to-emerald-500 text-black">
+        <h3 class="text-3xl md:text-4xl font-bold">
             About us
         </h3>
         <p class="mt-2 text-gray-500 text-sm md:text-base">
@@ -92,17 +91,10 @@ onMounted(async()=>{
 
 <style scoped>
 .org-header h3 {
-    font-size: 2.5rem;
-    font-weight: 800;
     background: linear-gradient(to right, #84cc16, #10b981);
     -webkit-background-clip: text;
     color: transparent;
     padding: 1rem 0;
-}
-
-.org-header p {
-    font-size: 1rem;
-    color: #6b7280;
 }
 </style>
 

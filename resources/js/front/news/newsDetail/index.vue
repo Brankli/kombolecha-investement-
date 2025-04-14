@@ -55,7 +55,7 @@ const goBack = () => {
                         <!-- Content -->
                         <div class="my-8">
                             <div class="text-md text-gray-800">
-                                <div  class="preview ql-editor"  v-html="news?.content"> 
+                                <div  class=" ql-editor preview"  v-html="news?.content"> 
                                 </div>
                             </div>
                         </div> 

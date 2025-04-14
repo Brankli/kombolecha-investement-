@@ -5,6 +5,7 @@
         "watch": "npx mix watch"
     },
     "devDependencies": {
+        "@tailwindcss/typography": "^0.5.16",
         "autoprefixer": "^10.4.16",
         "axios": "^1.6.1",
         "laravel-mix": "^6.0.49",

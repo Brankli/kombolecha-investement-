@@ -31,5 +31,7 @@ module.exports = {
             newsbackground: "url('/asset/images/newsbackground.jpg')",
         },
     },
-    plugins: [],
+     plugins: [ 
+        require('@tailwindcss/typography'),
+    ],
 };

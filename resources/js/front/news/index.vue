@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import Card from "./component/newsCard.vue";
 import eventCard from "./component/eventCard.vue";
-const perPage = ref(8);
+const perPage = ref(6);
 const currentPage = ref(1);
 const perevent = ref(8);
 const currenteventpage = ref(1);
@@ -85,22 +85,22 @@ const nexeventpage = () => {
 };
 </script>
 <template>
-    <div class="bg-gray-100 text-colorbackground font-body">
+    <div class="bg-gray-100 text-colorbackground w-[90%] sm:w-[80%] mx-auto font-body">
         <div class="">
             <main class=" py-6 bg-white">
                 <div >
                     <div>
-                        <div class="flex hidden border-b border-gray-200 justify-between">
-                            <h3 class="font-bold hidden sm:flex font-roboto text-darkred text-2xl mt-12">
+                        <div class="flex   border-b border-gray-200 justify-between">
+                            <h3 class="font-bold   sm:flex font-roboto text-darkred text-2xl mt-12">
                                 News
                             </h3>
-                            <h3 class="font-normal text-red-800 hidden sm:flex font-roboto text-xl mt-12">
+                            <h3 class="font-normal text-red-800   sm:flex font-roboto text-xl mt-12">
                                 Latest News
                             </h3>
                         </div>
 
                         <!-- searching -->
-                        <div class="max-w-xl hidden mt-8 mx-auto">
+                        <div class="max-w-xl   mt-8 mx-auto">
                             <input v-model="keywords" name="time" id="time"
                                 class="bg-gray-50 border-4 shadow-lg border-blue-600 text-gray-900 text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 w-full p-2 outline-none"
                                 placeholder="search news here ..." />
@@ -113,27 +113,28 @@ const nexeventpage = () => {
                         </div>
                     </div>
                 </div>
-                <!-- pagination -->
-                <div class="w-full bg-white mt-16 hidden text-center">
-                    <div class="flex flex-row gap-4 w-fit mx-auto">
-                        <button class="pagnations hover:bg-gray-300 active:text-darkred" @click="prevPage"
-                            :disabled="currentPage === 1">
-                            Previous
-                        </button>
-                        <button class="pagnations hover:bg-gray-300 active:text-darkred">
-                            {{ currentPage }}
-                        </button>
-                        <button class="pagnations hover:bg-gray-300 active:text-darkred">...</button>
-                        <button class="pagnations hover:bg-gray-300 active:text-darkred" @click="nextPage"
-                            :disabled="currentPage === totalPages">
-                            Next
-                        </button>
-                    </div>
+                 
+                <!-- Pagination -->
+                <div class="mt-12 flex justify-center items-center gap-4 text-sm">
+                    <button @click="prevPage" :disabled="currentPage === 1"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                        Previous
+                    </button>
+
+                    <span class="font-semibold text-lime-700">
+                        Page {{ currentPage }} of {{ totalPages }}
+                    </span>
+
+                    <button @click="nextPage" :disabled="currentPage === totalPages"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                        Next
+                    </button>
                 </div>
                 <!-- pagination -->
-                <div class="hidden">
+
+                <div class=" ">
                     <div class="flex border-b border-gray-200 justify-between">
-                        <h3 class="font-bold hidden sm:flex font-roboto text-darkred text-2xl mt-12">
+                        <h3 class="font-bold   sm:flex my-8 font-roboto text-darkred text-2xl mt-12">
                             Events and Announcements
                         </h3>
                     </div>
@@ -144,24 +145,24 @@ const nexeventpage = () => {
                     </div>
                 </div>
 
-                <div class="w-full hidden bg-white mt-16 text-center">
-                    <div class="flex flex-row gap-4 w-fit mx-auto">
-                        <button class="pagnations cursor-pointer hover:bg-gray-300 active:text-darkred"
-                            @click="previouseventpage" :disabled="currenteventpage === 1">
-                            Previous
-                        </button>
-                        <button class="pagnations cursor-pointer hover:bg-gray-300 active:text-darkred">
-                            {{ currenteventpage }}
-                        </button>
-                        <button class="pagnations cursor-pointer hover:bg-gray-300 active:text-darkred">
-                            ...
-                        </button>
-                        <button class="pagnations cursor-pointer hover:bg-gray-300 active:text-darkred"
-                            @click="nexeventpage" :disabled="currenteventpage === totaleventpages">
-                            Next
-                        </button>
-                    </div>
+                 <!-- Pagination -->
+                <div class="mt-12 flex justify-center items-center gap-4 text-sm">
+                    <button @click="previouseventpage" :disabled="currenteventpage === 1"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                        Previous
+                    </button>
+
+                    <span class="font-semibold text-lime-700">
+                        Page {{ currenteventpage }} of {{ totaleventpages }}
+                    </span>
+
+                    <button @click="nexeventpage" :disabled="currenteventpage === totaleventpages"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                        Next
+                    </button>
                 </div>
+                <!-- pagination -->
+
             </main>
         </div>
     </div>

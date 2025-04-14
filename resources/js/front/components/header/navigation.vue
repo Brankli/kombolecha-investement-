@@ -36,7 +36,7 @@ const setLanguage = (lang) => {
         <nav class="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center gap-3">
-                <img src="/asset/errorimage/logo.png" alt="Logo" class="h-10 w-auto" />
+                <!-- <img src="/asset/errorimage/logo.png" alt="Logo" class="h-10 w-auto" /> -->
             </div>
 
             <!-- Desktop Nav -->

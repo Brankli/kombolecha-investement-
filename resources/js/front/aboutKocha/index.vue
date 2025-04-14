@@ -3,16 +3,16 @@ import AboutKoch from "./AboutKoch.vue";
 </script>
 
 <template>
-    <div class="bg-white w-full sm:w-[90%] mx-auto pb-20 text-black">
-        <header class="org-header text-center my-8">
-            <h3
-                class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-lime-600 to-emerald-500 text-black">
-                About Kombolcha
-            </h3>
-            <p class="mt-2 text-gray-500 text-sm md:text-base">
-                Read about kombolcha to discover opportunities
-            </p>
-        </header>
+    <div class="bg-white w-full sm:w-[90%] mx-auto   text-black">
+        
+        <header class="org-header text-center my-12">
+                <h3 class="text-3xl md:text-4xl font-bold">
+                    About Kombolcha
+                </h3>
+                <p class="mt-2 text-gray-500 text-sm md:text-base">
+                    Read about kombolcha to discover opportunities
+                </p>
+            </header>
 
         <!-- Side-by-side Text + Image Section -->
         <div
@@ -58,16 +58,9 @@ import AboutKoch from "./AboutKoch.vue";
 
 <style scoped>
 .org-header h3 {
-    font-size: 2.5rem;
-    font-weight: 800;
     background: linear-gradient(to right, #84cc16, #10b981);
     -webkit-background-clip: text;
     color: transparent;
     padding: 1rem 0;
-}
-
-.org-header p {
-    font-size: 1rem;
-    color: #6b7280;
 }
 </style>

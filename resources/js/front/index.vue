@@ -29,50 +29,32 @@ const paginateEvent = computed(() => {
 
 
 </script>
-<template> 
+<template>
     <div class="w-[90%] sm:w-[80%] mx-auto">
         <div class=" mt-8">
             <div class="">
                 <home />
             </div>
         </div>
-
-        <div class=""> 
-            <div class="">
-                <div class="w-full m-8 ml-0 ">
-                    <h1 class=" text-darkred  p-4 border-b-4 border-darkred w-fit font-bold text-2xl">Announcments</h1>
+        <div class=" flex flex-row gap-4 my-16">
+            <div>
+                <h3 class="font-normal text-red-800   sm:flex font-roboto text-xl my-8"> Events </h3>
+                <div v-for="event in paginateEvent" :key="event">
+                    <recentevent v-if="event.type == 'event'" :event="event" />
                 </div>
-                <!-- recent list -->
+            </div>
+
+            <div>
+                <h3 class="font-normal text-red-800   sm:flex font-roboto text-xl my-8"> Announcements </h3>
                 <div v-for="event in paginateEvent" :key="event">
                     <recentevent v-if="event.type == 'announcment'" :event="event" />
                 </div>
             </div>
-            <div class="sm:col-span-2">
-            </div>
         </div>
-        <div class=" mb-16">
-            <div class="sm:col-span-1">
-
-            </div>
-            <div class="">
-                <div class="w-full  m-8 ml-0 ">
-                    <h1 class=" text-darkred  p-4 border-b-4 border-darkred w-fit font-bold text-2xl">Events</h1>
-                </div>
-                <!-- recentlist -->
-
-                <div v-for="event in paginateEvent" :key="event">
-                    <recentevent v-if="event.type == 'event'" :event="event" />
-                </div>
-
-                <div class="text-end ">
-                    <router-link to="/news"
-                        class="bg-sky-700 hover:bg-sky-600 text-white p-2 text-xl rounded font-bold">More</router-link>
-                </div>
-            </div>
-            <div class="sm:col-span-2 ">
-            </div>
-        </div>
-
+        <router-link to="/news" class="flex items-center w-fit  border ml-4 border-yellow-600 rounded-md p-1 px-2 my-8 space-x-2 text-yellow-700 cursor-pointer hover:text-white hover:bg-yellow-700">
+            <i class="fas fa-arrow-right text-xl"></i>
+            <span class="text-md font-bold">More Event</span>
+        </router-link>
     </div>
     <div>
         <testimonial />
