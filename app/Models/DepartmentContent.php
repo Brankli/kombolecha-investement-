@@ -16,4 +16,8 @@ class DepartmentContent extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+    public function staff()
+    {
+        return $this->hasMany(Staff::class, 'dep_id');
+    }
 }

@@ -92,5 +92,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Banner::class,'author_id');
     }
+    public function staff(){
+        return $this->hasMany(staff::class,'user_id');
+    }
 }
         
