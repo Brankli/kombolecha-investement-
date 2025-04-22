@@ -52,7 +52,9 @@ const paginatedData = computed(() => {
     return filterNews.value.slice(start, end);
 });
 
-const totalPages = computed(() => Math.ceil(allnews.value.length / perPage.value));
+const totalPages = computed(() =>
+    Math.ceil(allnews.value.length / perPage.value)
+);
 const prevPage = () => {
     if (currentPage.value > 1) {
         currentPage.value--;
@@ -71,7 +73,9 @@ const paginatevent = computed(() => {
     return events.value.slice(start, end);
 });
 
-const totaleventpages = computed(() => Math.ceil(events.value.length / perevent.value));
+const totaleventpages = computed(() =>
+    Math.ceil(events.value.length / perevent.value)
+);
 const previouseventpage = () => {
     if (currenteventpage.value > 1) {
         currenteventpage.value--;
@@ -85,39 +89,60 @@ const nexeventpage = () => {
 };
 </script>
 <template>
-    <div class="bg-gray-100 text-colorbackground w-[90%] sm:w-[80%] mx-auto font-body">
+    <div
+        class="bg-gray-100 text-colorbackground w-[90%] sm:w-[80%] mx-auto font-body"
+    >
         <div class="">
-            <main class=" py-6 bg-white">
-                <div >
+            <main class="py-6 bg-white">
+                <div>
                     <div>
-                        <div class="flex   border-b border-gray-200 justify-between">
-                            <h3 class="font-bold   sm:flex font-roboto text-darkred text-2xl mt-12">
+                        <div
+                            class="flex border-b border-gray-200 justify-between"
+                        >
+                            <h3
+                                class="font-bold sm:flex font-roboto text-darkred text-2xl mt-12"
+                            >
                                 News
                             </h3>
-                            <h3 class="font-normal text-red-800   sm:flex font-roboto text-xl mt-12">
+                            <h3
+                                class="font-normal text-red-800 sm:flex font-roboto text-xl mt-12"
+                            >
                                 Latest News
                             </h3>
                         </div>
 
                         <!-- searching -->
-                        <div class="max-w-xl   mt-8 mx-auto">
-                            <input v-model="keywords" name="time" id="time"
+                        <div class="max-w-xl mt-8 mx-auto">
+                            <input
+                                v-model="keywords"
+                                name="time"
+                                id="time"
                                 class="bg-gray-50 border-4 shadow-lg border-blue-600 text-gray-900 text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 w-full p-2 outline-none"
-                                placeholder="search news here ..." />
+                                placeholder="search news here ..."
+                            />
                         </div>
 
-                        <div class="grid font-roboto md:grid-cols-3  sm:gap-4">
-                            <div class="mt-8" v-for="news in paginatedData" :key="news.id">
+                        <div class="grid font-roboto md:grid-cols-3 sm:gap-4">
+                            <div
+                                class="mt-8"
+                                v-for="news in paginatedData"
+                                :key="news.id"
+                            >
                                 <Card :news="news" />
                             </div>
                         </div>
                     </div>
                 </div>
-                 
+
                 <!-- Pagination -->
-                <div class="mt-12 flex justify-center items-center gap-4 text-sm">
-                    <button @click="prevPage" :disabled="currentPage === 1"
-                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                <div
+                    class="mt-12 flex justify-center items-center gap-4 text-sm"
+                >
+                    <button
+                        @click="prevPage"
+                        :disabled="currentPage === 1"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                    >
                         Previous
                     </button>
 
@@ -125,8 +150,11 @@ const nexeventpage = () => {
                         Page {{ currentPage }} of {{ totalPages }}
                     </span>
 
-                    <button @click="nextPage" :disabled="currentPage === totalPages"
-                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                    <button
+                        @click="nextPage"
+                        :disabled="currentPage === totalPages"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                    >
                         Next
                     </button>
                 </div>
@@ -134,21 +162,34 @@ const nexeventpage = () => {
 
                 <div class=" ">
                     <div class="flex border-b border-gray-200 justify-between">
-                        <h3 class="font-bold   sm:flex my-8 font-roboto text-darkred text-2xl mt-12">
+                        <h3
+                            class="font-bold sm:flex my-8 font-roboto text-darkred text-2xl mt-12"
+                        >
                             Events and Announcements
                         </h3>
                     </div>
-                    <div class="grid font-roboto md:grid-cols-3 lg:grid-cols-4 sm:gap-4">
-                        <div class="mt-8" v-for="announcement in paginatevent" :key="announcement.id">
+                    <div
+                        class="grid font-roboto md:grid-cols-3 lg:grid-cols-4 sm:gap-4"
+                    >
+                        <div
+                            class="mt-8"
+                            v-for="announcement in paginatevent"
+                            :key="announcement.id"
+                        >
                             <eventCard :announcement="announcement" />
                         </div>
                     </div>
                 </div>
 
-                 <!-- Pagination -->
-                <div class="mt-12 flex justify-center items-center gap-4 text-sm">
-                    <button @click="previouseventpage" :disabled="currenteventpage === 1"
-                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                <!-- Pagination -->
+                <div
+                    class="mt-12 flex justify-center items-center gap-4 text-sm"
+                >
+                    <button
+                        @click="previouseventpage"
+                        :disabled="currenteventpage === 1"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                    >
                         Previous
                     </button>
 
@@ -156,13 +197,15 @@ const nexeventpage = () => {
                         Page {{ currenteventpage }} of {{ totaleventpages }}
                     </span>
 
-                    <button @click="nexeventpage" :disabled="currenteventpage === totaleventpages"
-                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition">
+                    <button
+                        @click="nexeventpage"
+                        :disabled="currenteventpage === totaleventpages"
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-40 transition"
+                    >
                         Next
                     </button>
                 </div>
                 <!-- pagination -->
-
             </main>
         </div>
     </div>

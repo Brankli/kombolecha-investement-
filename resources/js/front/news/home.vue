@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 
 import heronews from "./component/heronews.vue";
-import recentListVue from "./component/recentList.vue";  
+import recentListVue from "./component/recentList.vue";
 
 const allnews = ref([]);
 const perPage = ref(4);
@@ -40,7 +40,13 @@ const herodatapagination = computed(() => {
 });
 </script>
 <template>
-     
+    <!-- <div class="m-8 ml-0 border-b-2 border-gray-100">
+        <div class="flex flex-row gap-4 text-gray-600 p-2">
+            <p>News</p>
+            <p>Events</p>
+            <p>Announcements</p>
+        </div>
+    </div> -->
     <div>
         <h1 class="text-xl font-bold text-yellow-700 my-4">Latest news</h1>
         <div class="grid lg:grid-cols-4 gap-4">
@@ -53,11 +59,14 @@ const herodatapagination = computed(() => {
                 <div v-for="news in paginatedData" :key="news.id">
                     <recentListVue :news="news" />
                 </div>
-                <router-link to="/news" class="flex items-center w-fit border ml-4 border-yellow-600 rounded-md p-1 px-2 my-8 space-x-2 text-yellow-700 cursor-pointer hover:text-white hover:bg-yellow-700">
+                <router-link
+                    to="/news"
+                    class="flex items-center w-fit border ml-4 border-yellow-600 rounded-md p-1 px-2 my-8 space-x-2 text-yellow-700 cursor-pointer hover:text-white hover:bg-yellow-700"
+                >
                     <i class="fas fa-arrow-right text-xl"></i>
                     <span class="text-md font-bold">More news</span>
                 </router-link>
             </div>
         </div>
-    </div> 
+    </div>
 </template>
