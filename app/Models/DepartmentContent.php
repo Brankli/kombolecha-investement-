@@ -11,13 +11,5 @@ class DepartmentContent extends Model
 
     use HasFactory;
 
-    protected $fillable = ['name', 'profile', 'email', 'phone_no', 'mission', 'vision', 'goal', 'position'];
-    public function admin(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-    public function staff()
-    {
-        return $this->hasMany(Staff::class, 'dep_id');
-    }
+    protected $fillable = [ 'mission', 'vision', 'goal', ];
 }

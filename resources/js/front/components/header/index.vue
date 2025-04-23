@@ -8,7 +8,7 @@ const isSticky = ref(false);
 const navHeight = ref(0);
 const navRef = ref(null);
 const placeholderRef = ref(null);
- 
+
 const updateNavHeight = () => {
     nextTick(() => {
         if (navRef.value) {
@@ -29,7 +29,7 @@ const handleScroll = () => {
 onMounted(() => {
     updateNavHeight();
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", updateNavHeight);  
+    window.addEventListener("resize", updateNavHeight);
 });
 
 onUnmounted(() => {
@@ -39,22 +39,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="bg-white w-full"> 
-        <div class="hidden md:block">
+    <div class="bg-white w-full">
+        <div class="md:block left-0 right-0 top-0 z-50">
             <socialMedia />
             <logo />
         </div>
- 
+
         <div ref="placeholderRef"></div>
- 
+
         <div :style="{ height: isSticky ? navHeight + 'px' : '0px' }"></div>
- 
-        <div ref="navRef" :class="[
-            'transition-all duration-300',
-            isSticky
-                ? 'fixed top-0 left-0 w-full z-50 shadow-md bg-white'
-                : '',
-        ]">
+
+        <div
+            ref="navRef"
+            :class="[
+                'transition-all duration-300',
+                isSticky
+                    ? 'fixed top-0 left-0 w-full z-50 shadow-md bg-white'
+                    : '',
+            ]"
+        >
             <navigation />
         </div>
     </div>

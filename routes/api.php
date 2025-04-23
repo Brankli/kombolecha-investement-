@@ -13,6 +13,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SponserController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TestimonailController;
@@ -35,6 +36,8 @@ Route::middleware(['auth:api'])->group(function () {
     //user route
     Route::get('/user/getall', [UserController::class, 'index']);
     Route::get('/edit/user/{id}', [UserController::class, 'edit']);
+    Route::post('/staff', [UserController::class, 'store']);
+
     //visitor
     Route::get('/countvisitor', [VisitorController::class, 'index']);
     //news
@@ -42,59 +45,77 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/news/update/{id}', [NewsController::class, 'update']);
     Route::post('/hidden', [NewsController::class, 'hidden']);
     //event 
-
+    
     Route::post('/event/store', [EventController::class, 'store']);
     Route::post('/event/update/{id}', [EventController::class, 'update']);
     Route::post('/event/hidden', [EventController::class, 'hidden']);
-
+    
     //question 
     Route::post('/answer/{id}', [QuestionController::class, 'answer']);
     Route::get('/question/show/{id}', [QuestionController::class, 'edit']);
     Route::get('/getall/question', [QuestionController::class, 'index']);
     Route::get('/count/question', [QuestionController::class, 'totalquestions']);
-
+    
     //web content 
     Route::post('/webcontent/update/{id}', [WebContentController::class, 'update']);
-
+    
     //departments 
     Route::post('/update/department/{id}', [DepartmentContentroller::class, 'update']);
-
+    
     //privious work route
     Route::post('/store/PreviousWork', [PreviousWorkController::class, 'store']);
     Route::post('/update/PreviousWork/{id}', [PreviousWorkController::class, 'update']);
     Route::post('/work/hidden', [PreviousWorkController::class, 'hidden']);
-
+    
     //user route
     Route::post('/update/user/{id}', [UserController::class, 'update']);
-
+    
     //service route
     Route::post('/service/update/{id}', [ServiceController::class, 'update']);
-
+    
     //resources
     Route::post('/resource/store', [ResourceController::class, 'store']);
     Route::post('/resource/hidden', [ResourceController::class, 'hidden']);
-
+    
     //sebscribers
     Route::post('/subscriber/broadcast', [SubscriptionController::class, 'broadcast']);
-
+    
     //sponsers    
     Route::post('/store/sponser', [SponserController::class, 'store']);
     Route::post('/sponser/hidden', [SponserController::class, 'hidden']);
-
+    
     //testimoniyals route
     Route::post('/store/testimonial', [TestimonailController::class, 'store']);
     Route::post('/testimonial/hidden', [TestimonailController::class, 'hidden']);
     Route::put('/testimonials/{id}/hidden', [TestimonailController::class, 'updateHidden']);
-
-
+    
+    
     //banner api
     Route::post('/store/banner', [BannerController::class, 'store']);
     Route::post('/banner/hidden', [BannerController::class, 'hidden']);
+    // slider 
+    Route::get('/getall/sliders', [SliderController::class, 'index']);
+    Route::post('/store/sliders', [SliderController::class, 'store']);
+    Route::post('/update/sliders/{id}', [SliderController::class, 'update']);
+    Route::post('/delete/sliders/{id}', [SliderController::class, 'destroy']);
+    Route::get('/edit/sliders/{id}', [SliderController::class, 'edit']);
 
-    Route::post('/staff', [StaffController::class, 'store']);
+
+
+
+
+
+    
+    // Route::post('/staff', [StaffController::class, 'store']);
     Route::delete('/staff/deletes/{id}', [StaffController::class, 'destroy']);
+    // new updated and efficent route
+    
+    
+    Route::post('/store/department', [DepartmentContentroller::class, 'store']);
+    Route::get('/edit/department/{id}', [DepartmentContentroller::class, 'edit']);    
 });
 
+Route::get('users/role/{role}', [UserController::class, 'getUsersByRole']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/resetpassword', [AuthController::class, 'resetlink']);
@@ -123,9 +144,7 @@ Route::get('/getall/content', [WebContentController::class, 'index']);
 Route::get('/edit/content/{id}', [WebContentController::class, 'edit']);
 
 //departments route
-Route::post('/store/department', [DepartmentContentroller::class, 'store']);
 Route::get('/getall/department', [DepartmentContentroller::class, 'index']);
-Route::get('/edit/department/{id}', [DepartmentContentroller::class, 'edit']);
 Route::get('/department/staffs', [DepartmentContentroller::class, 'getStaffs']);
 
 //privious ork wroute
@@ -158,4 +177,5 @@ Route::get('/getall/testimonial', [TestimonailController::class, 'index']);
 //banner route
 
 Route::get('/getall/banner', [BannerController::class, 'index']);
-Route::get('/staff/getall', [StaffController::class, 'index']);
+Route::get('/staff/getall', [UserController::class, 'getStaffs']);
+

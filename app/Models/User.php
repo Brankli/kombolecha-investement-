@@ -2,8 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\News; 
-
+use App\Models\News;
+use App\Models\Role\Admin;
+use App\Models\Role\Development;
+use App\Models\Role\Director;
+use App\Models\Role\Expansition;
+use App\Models\Role\Miniral;
+use App\Models\Role\ourStaff;
+use App\Models\Slider;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +30,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'position',
+        'image',
+        'phone_no',
     ];
 
     /**
@@ -45,6 +55,26 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function director() { return $this->hasOne(Director::class); }
+    public function development(){ return $this->hasOne(Development::class); }
+    public function expansion(){ return $this->hasOne(Expansition::class); }
+    public function miniral(){ return $this->hasOne(Miniral::class); }
+    public function admin(){ return $this->hasOne(Admin::class); }
+    public function ourStaf(){ return $this->hasOne(ourStaff::class); }
+    public function slider(){ return $this->hasOne(Slider::class); }
+
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    
+    //     static::creating(function ($user) {
+    //         if (empty($user->role)) {
+    //             $user->role = 'ourStaff';
+    //         }
+    //     });
+    // }
+    
     public function contents(): HasMany
     {
         return $this->hasMany(Content::class, 'author_id');

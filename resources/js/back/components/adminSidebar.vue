@@ -107,10 +107,20 @@ const props = defineProps({
             >Testimonies</span
           ></router-link
         >
-        <!-- <router-link to="/newbanner"
-                    class=" flex items-center  space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300">
-                    <font-awesome-icon icon="paper-plane" class="text-white"/>
-                    <span class="text-xl font-semibold text-white px-2">Banner</span></router-link> -->
+        <router-link
+          to="/staff"
+          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
+        >
+          <font-awesome-icon icon="paper-plane" class="text-white" />
+          <span class="text-xl font-semibold text-white px-2">staff</span></router-link
+        >
+        <router-link
+          to="/sliderindex"
+          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
+        >
+          <font-awesome-icon icon="paper-plane" class="text-white" />
+          <span class="text-xl font-semibold text-white px-2">slider</span></router-link
+        >
       </nav>
     </div>
   </div>

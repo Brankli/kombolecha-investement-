@@ -10,6 +10,7 @@ const modules = [Pagination, Autoplay];
 
 <template>
     <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+        <!-- Logo always visible -->
         <div
             class="flex flex-col items-center md:items-start text-center md:text-left"
         >
@@ -19,7 +20,9 @@ const modules = [Pagination, Autoplay];
                 class="object-contain h-48"
             />
         </div>
-        <div class="md:col-span-3 w-full">
+
+        <!-- Slider: hidden on mobile, visible from md+ -->
+        <div class="md:col-span-3 w-full hidden md:block">
             <Swiper
                 :modules="[Pagination, Autoplay]"
                 :slides-per-view="1"

@@ -17,15 +17,9 @@ class DepartmentResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone_no' => $this->phone_no,
             'mission' => $this->mission,
             'vision' => $this->vission,
             'goal' => $this->goal,
-            'position' => $this->position,
-
-            'profile' => $this->profile ? Storage::disk('public')->url($this->profile) : null,
         ];
     }
 }

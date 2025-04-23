@@ -1,11 +1,9 @@
 <script setup>
 import name from "../../components/name.vue";
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
+import { ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { useAlertsStore } from "../../../store/useAlertsStore";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
 
 const alertstore = useAlertsStore();
 const message = ref("");
@@ -13,42 +11,10 @@ const Name = ref("");
 const imageUpload = ref(null);
 const token = useLocalStorage("token", "");
 const selectedimagedata = ref("");
-const editorContainer = ref(null);
-let quillEditor = null;
-
-const initializeEditor = () => {
-  if (!editorContainer.value) return;
-
-  quillEditor = new Quill(editorContainer.value, {
-    theme: "snow",
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, 4, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ script: "sub" }, { script: "super" }],
-        [{ color: [] }, { background: [] }],
-        [{ font: [] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ align: [] }],
-        ["link", "image", "blockquote", "code-block"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Write your description",
-  });
-
-  quillEditor.on("text-change", () => {
-    message.value = quillEditor.root.innerHTML;
-  });
-
-  quillEditor.root.innerHTML = message.value;
-};
-
 const formData = new FormData();
 
 const selectImage = () => {
   const selectedImage = imageUpload.value.files[0];
-  console.log(selectedImage);
   selectedimagedata.value = URL.createObjectURL(selectedImage);
   if (selectedImage) {
     formData.append("image", selectedImage);
@@ -58,41 +24,26 @@ const selectImage = () => {
 const post = () => {
   formData.append("discribution", message.value);
   formData.append("Name", Name.value);
+
   axios.defaults.headers.common["Authorization"] = token.value;
   axios
     .post("./api/store/testimonial", formData)
     .then((res) => {
       alertstore.showSuccessToast(res.data.message);
-      setTimeout(() => {
-        message.value = "";
-        Name.value = "";
-        quillEditor.root.innerHTML = "";
-      }, 2000);
+      resetForm();
     })
     .catch((error) => {
       alertstore.showErrortost(error.response.data.error);
     });
 };
 
-onMounted(() => {
-  initializeEditor();
-});
-
-defineProps({
-  modelValue: {
-    type: String,
-    default: "",
-  },
-});
-
-const emit = defineEmits(["update:modelValue"]);
-
-watch(
-  () => message.value,
-  (newValue) => {
-    emit("update:modelValue", newValue);
-  }
-);
+const resetForm = () => {
+  message.value = "";
+  Name.value = "";
+  selectedimagedata.value = "";
+  imageUpload.value.value = "";
+  formData = new FormData();
+};
 </script>
 
 <template>
@@ -110,41 +61,58 @@ watch(
             <form class="mb-6">
               <div class="mb-6">
                 <label
-                  for="body"
+                  for="name"
                   class="block mb-2 text-sm font-medium text-gray-900 capitalize"
                 >
-                  Name</label
-                >
+                  Name
+                </label>
                 <input
-                  id="body"
+                  id="name"
                   v-model="Name"
-                  rows="4"
                   class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   placeholder="Please enter your name"
                 />
               </div>
-              <!-- Removed v-html -->
-              <div
-                ref="editorContainer"
-                class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]"
-              ></div>
+
+              <div class="mb-6">
+                <label
+                  for="message"
+                  class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+                >
+                  Testimonial Text
+                </label>
+                <textarea
+                  id="message"
+                  v-model="message"
+                  rows="4"
+                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  placeholder="Write your testimonial here..."
+                ></textarea>
+              </div>
+
               <div class="mb-6">
                 <label
                   for="file"
                   class="block mb-2 text-sm font-medium text-gray-900 capitalize"
-                  >Client Photo</label
                 >
+                  Client Photo
+                </label>
                 <input
                   accept=".png,.jpg,.jpeg"
                   type="file"
-                  rows="4"
                   ref="imageUpload"
                   @change="selectImage"
                   class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="Your question..."
                 />
               </div>
-              <img v-if="selectedimagedata" :src="selectedimagedata" alt="" />
+
+              <img
+                v-if="selectedimagedata"
+                :src="selectedimagedata"
+                class="mb-4 max-h-40 object-contain"
+                alt="Preview"
+              />
+
               <button
                 @click.prevent="post"
                 class="text-white bg-blue-700 hover:bg-blue-800 w-fit mx-auto focus:ring-4 focus:ring-blue-300 font-medium rounded-lg capitalize text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"

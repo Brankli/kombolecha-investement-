@@ -12,13 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('department_contents', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('position');
-            $table->string('email')->unique();
-            $table->string('phone_no')->unique();
+            $table->id(); 
             $table->text('mission');
-            $table->string('profile');
             $table->text('vission');
             $table->text('goal');
             $table->foreignId('author_id')->constrained('users')->onDelete('cascade');

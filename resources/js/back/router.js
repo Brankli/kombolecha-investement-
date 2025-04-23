@@ -30,6 +30,8 @@ import banner from "./pages/banner/create.vue";
 import newbanner from "./pages/banner/index.vue";
 import staff from "./pages/staff/index.vue"
 import newstaff from "./pages/staff/create.vue"
+import sliderindex from "./pages/slider/index.vue"
+import slidercreate from "./pages/slider/create.vue"
 
 
 //front routes
@@ -203,6 +205,16 @@ const routes = [
                 path: "/newstaff",
                 name: "newstaff",
                 component: newstaff,
+            },
+            {
+                path: "/sliderindex",
+                name: "sliderindex",
+                component: sliderindex,
+            },
+            {
+                path: "/slidercreate",
+                name: "slidercreate",
+                component: slidercreate,
             },
         ],
         meta: {

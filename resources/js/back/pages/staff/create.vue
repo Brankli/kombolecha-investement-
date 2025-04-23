@@ -6,139 +6,147 @@ import { ref } from "vue";
 import { useAlertsStore } from "../../../store/useAlertsStore";
 
 const alertstore = useAlertsStore();
-const imageUpload = ref(null);
+const imageInput = ref(null);
+const selectedImage = ref(null);
 const token = useLocalStorage("token", "");
+
 const pname = ref("");
 const position = ref("");
 const phone = ref("");
 const email = ref("");
 
-const formData = new FormData();
-
-const selectImage = () => {
-  const selectedImage = imageUpload.value.files[0];
-  if (selectedImage) {
-    formData.append("image", selectedImage);
-  }
+const selectImage = (event) => {
+  selectedImage.value = event.target.files[0];
 };
 
 const addStaff = () => {
+  const formData = new FormData();
+  if (selectedImage.value) {
+    formData.append("image", selectedImage.value);
+  }
   formData.append("name", pname.value);
   formData.append("position", position.value);
-  formData.append("phone", phone.value);
+  formData.append("phone_no", phone.value);
   formData.append("email", email.value);
 
   axios.defaults.headers.common["Authorization"] = token.value;
+
   axios
     .post(`./api/staff`, formData)
+
     .then((res) => {
       alertstore.showSuccessToast(res.data.message);
-      setTimeout(() => {
-        pname.value = "";
-      }, 2000);
+      pname.value = "";
+      position.value = "";
+      phone.value = "";
+      email.value = "";
+      selectedImage.value = null;
+      if (imageInput.value) imageInput.value.value = null;
     })
     .catch((err) => {
-      alertstore.showErrortost(err.response.data.error);
+      alertstore.showErrortost(err.response?.data?.error || "Submission failed");
     });
 };
 </script>
 <template>
   <name name="Add New Staff" />
   <div class="bg-gray-100 p-16">
-    <div
-      class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100"
-    >
+    <div class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded">
       <div class="w-full bg-white rounded-lg md:mt-0 xl:p-0">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1 class="text-lg text-sky-700 leading-tight tracking-wide capitalize">
+          <h1 class="text-lg text-sky-700 font-semibold tracking-wide capitalize">
             Add Staff
           </h1>
-          <form class="mb-6">
+          <form class="mb-6" @submit.prevent="addStaff">
             <div class="mb-6">
               <label
-                for="file"
+                for="name"
                 class="block mb-2 text-sm font-medium text-gray-900 capitalize"
-                >upload staff logo</label
               >
-              <input
-                accept=".png,.jpg,.jpeg, .gif"
-                type="file"
-                rows="4"
-                ref="imageUpload"
-                @change="selectImage"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder="Your question..."
-              />
-            </div>
-            <div class="mb-6">
-              <label
-                for="	name"
-                class="block mb-2 text-sm font-medium text-gray-900 capitaliz"
-              >
-                Name</label
-              >
+                Name
+              </label>
               <input
                 v-model="pname"
                 type="text"
-                id="phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-                placeholder="	name of person"
+                id="name"
+                placeholder="Name of person"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 required
               />
             </div>
+
             <div class="mb-6">
               <label
-                for="	position"
-                class="block mb-2 text-sm font-medium text-gray-900 capitaliz"
+                for="position"
+                class="block mb-2 text-sm font-medium text-gray-900 capitalize"
               >
-                position</label
-              >
+                Position
+              </label>
               <input
                 v-model="position"
                 type="text"
-                id="phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-                placeholder="	position of person"
+                id="position"
+                placeholder="Position of person"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 required
               />
             </div>
+
             <div class="mb-6">
               <label
-                for="	phone"
-                class="block mb-2 text-sm font-medium text-gray-900 capitaliz"
+                for="phone"
+                class="block mb-2 text-sm font-medium text-gray-900 capitalize"
               >
-                phone</label
-              >
+                Phone
+              </label>
               <input
                 v-model="phone"
                 type="text"
                 id="phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-                placeholder="	phone of person"
+                placeholder="Phone of person"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 required
               />
-              <div class="mb-6">
-                <label
-                  for="	email"
-                  class="block mb-2 text-sm font-medium text-gray-900 capitaliz"
-                >
-                  email</label
-                >
-                <input
-                  v-model="email"
-                  type="text"
-                  id="phone"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-                  placeholder="	email of person"
-                  required
-                />
-              </div>
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+              >
+                Email
+              </label>
+              <input
+                v-model="email"
+                type="email"
+                id="email"
+                placeholder="Email of person"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
+              />
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="file"
+                class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+              >
+                Upload Staff Logo
+              </label>
+              <input
+                id="file"
+                type="file"
+                accept=".jpg,.jpeg,.png,.gif"
+                @change="selectImage"
+                ref="imageInput"
+                class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
             </div>
             <button
-              @click.prevent="addStaff"
-              class="text-white bg-blue-700 hover:bg-blue-800 w-fit mx-auto focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 capitalize block"
+              type="submit"
+              class="text-white bg-blue-700 hover:bg-blue-800 w-fit mx-auto focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 capitalize block"
             >
-              add staff
+              Add Staff
             </button>
           </form>
         </div>

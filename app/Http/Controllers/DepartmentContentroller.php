@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DepartmentResource;
+use App\Http\Resources\UserResource;
 use App\Models\DepartmentContent;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,21 +15,15 @@ class DepartmentContentroller extends Controller
 {
 
     public function index() {
-        $departmentContents = DepartmentContent::orderByDesc('id')->paginate(10);
+        $departmentContents = DepartmentContent::first();
 
-        if ($departmentContents->isEmpty()) {
+        if (!$departmentContents) {
             return response()->json(['message' => 'No DepartmentContent found'], 404);
         }
-
-        $visions = DepartmentContent::pluck('vission');
-        $missions = DepartmentContent::pluck('mission');
-        $goals = DepartmentContent::pluck('goal'); 
+ 
 
         return response()->json([
-            'departmentContents'  => DepartmentResource::collection($departmentContents),
-            'visions'             => $visions,
-            'missions'            => $missions,
-            'goals'               => $goals, 
+            'data'  => new DepartmentResource($departmentContents),
         ]);
     }
 
@@ -96,23 +92,26 @@ class DepartmentContentroller extends Controller
 
 
     public function getStaffs() { 
-        $departmentContents = DepartmentContent::orderByDesc('id')->paginate(10);
-
-        if ($departmentContents->isEmpty()) {
-            return response()->json(['message' => 'No DepartmentContent found'], 404);
-        } 
-
-        $departmentHead     = $departmentContents->firstWhere('position', 'deparment head');
-        $mineralDirector    = $departmentContents->firstWhere('position', 'miniral director');
-        $expansionDirector  = $departmentContents->firstWhere('position', 'expansion director');
-        $developmentDirector = $departmentContents->firstWhere('position', 'development director');
+     
+        $departmentHead = User::query()
+                ->has('director')
+                ->first();
+        $mineralDirector    = User::query()
+                ->has('miniral')
+                ->first();
+        $expansionDirector  = User::query()
+            ->has('expansion')
+            ->first();
+        $developmentDirector = User::query()
+            ->has('development')
+            ->first();
 
         return response()->json([ 
 
-            'departmentHead'      => new DepartmentResource($departmentHead),
-            'mineralDirector'     => new DepartmentResource($mineralDirector),
-            'expansionDirector'   => new DepartmentResource($expansionDirector),
-            'developmentDirector' => new DepartmentResource($developmentDirector),
+            'departmentHead'      => new UserResource($departmentHead),
+            'mineralDirector'     => new UserResource($mineralDirector),
+            'expansionDirector'   => new UserResource($expansionDirector),
+            'developmentDirector' => new UserResource($developmentDirector),
         ]);
     }
 }
