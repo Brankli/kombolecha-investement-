@@ -39,31 +39,42 @@ function nextPage() {
     <div class="grid lg:grid-cols-6 gap-6 p-3 w-[90%] sm:w-[80%] mx-auto">
         <!-- Main content -->
         <section class="lg:col-span-4">
-            <h1 class="border-b-2 border-gray-200 text-2xl font-bold text-darkred mb-2">
+            <h1
+                class="border-b-2 border-gray-200 text-2xl font-bold text-darkred mb-2"
+            >
                 Resources
             </h1>
             <p class="text-md mb-6">You Can Download Our Resource as PDF</p>
 
             <div class="space-y-4">
-                <ResourceCard v-for="item in paginatedData" :key="item.id" :resource="item" />
+                <ResourceCard
+                    v-for="item in paginatedData"
+                    :key="item.id"
+                    :resource="item"
+                />
             </div>
 
             <div class="bg-white mt-8 py-4">
                 <div class="flex justify-center items-center gap-4">
-                    <button class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
-                        @click="prevPage" :disabled="currentPage === 1">
+                    <button
+                        class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                        @click="prevPage"
+                        :disabled="currentPage === 1"
+                    >
                         Previous
                     </button>
                     <span class="px-4 py-2 bg-gray-100 rounded">
                         {{ currentPage }} / {{ totalPages }}
                     </span>
-                    <button class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
-                        @click="nextPage" :disabled="currentPage === totalPages">
+                    <button
+                        class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                        @click="nextPage"
+                        :disabled="currentPage === totalPages"
+                    >
                         Next
                     </button>
                 </div>
             </div>
         </section>
-
     </div>
 </template>

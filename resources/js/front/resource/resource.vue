@@ -23,7 +23,8 @@ function downloadpdf(resource) {
         <div
             class="flex gap-3 bg-orange-200 p-2.5 border rounded flex-wrap border-sky-600"
         >
-            <i class="material-icons text-darkblue">download</i>
+            <i class="fas fa-download text-darkblue"></i>
+
             <p
                 @click.prevent="downloadpdf(props.resource.resource)"
                 class="hover:text-sky-800 bg-orange-200"
