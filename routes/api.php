@@ -158,7 +158,7 @@ Route::get('/edit/content/{id}', [WebContentController::class, 'edit']);
 
 //departments route
 Route::get('/getall/department', [DepartmentContentroller::class, 'index']);
-Route::get('/department/staffs', [DepartmentContentroller::class, 'getStaffs']);
+Route::get('/department-staffs', [DepartmentContentroller::class, 'getStaffs']);
 
 //privious ork wroute
 Route::get('/getall/PreviousWork', [PreviousWorkController::class, 'index']);

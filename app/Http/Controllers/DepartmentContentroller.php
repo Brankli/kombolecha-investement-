@@ -141,6 +141,7 @@ class DepartmentContentroller extends Controller
     // Existing getStaffs method
     public function getStaffs()
     {
+ 
         $departmentHead     = User::query()->has('director')->first();
         $mineralDirector    = User::query()->has('miniral')->first();
         $expansionDirector  = User::query()->has('expansion')->first();
