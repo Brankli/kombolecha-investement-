@@ -57,7 +57,6 @@ class NewsController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|unique:news|max:255',
             'content' => 'required',
-            'info' => 'required',
             'image' => 'required|mimes:jpeg,png,jpg|max:51200',
         ]);
 
@@ -75,7 +74,7 @@ class NewsController extends Controller
         $news = $admin->news()->create([
             'title' => $request->title,
             'content' => $request->content,
-            'info'=>$request->info,
+            'info'=>'No contact',
             'image' => $filePath,
         ]);
 
@@ -97,37 +96,47 @@ class NewsController extends Controller
     }
 
 
+public function update(Request $request, $id)
+{
+    $news = News::findOrFail($id);
 
-    public function update(Request $request, $id)
-    {
-            $news = News::findOrFail($id);
+    $validator = Validator::make($request->all(), [
+        'title' => 'required|max:255',  // Title is now required for update
+        'content' => 'required',        // Content is now required for update
+        'image' => 'nullable|mimes:jpeg,png,jpg', // Image is optional
+    ]);
 
-            $validator = Validator::make($request->all(), [
-                'title' => '',
-                'content' => '',
-                'image' => 'mimes:jpeg,png,jpg',
-            ]);
-
-            try {
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 422);
-            } 
-
-            if ($request->hasFile('image')) {
-                Storage::disk('public')->delete($news->image);
-                $image = $request->file('image');
-                $filePath = $image->store('news', 'public'); 
-
-                $news->update(['image' => $filePath]);
-            }
-
-            return response()->json(['message' => 'News updated successfully'], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'No news found with this ID'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update news'], 500);
+    try {
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
         }
+
+        // Update the title and content
+        $news->update([
+            'title' => $request->title,
+            'content' => $request->content,
+        ]);
+
+        // Handle image update if a new image is uploaded
+        if ($request->hasFile('image')) {
+            // Delete the old image from storage
+            Storage::disk('public')->delete($news->image);
+
+            // Upload the new image and update the file path
+            $image = $request->file('image');
+            $filePath = $image->store('news', 'public');
+            $news->update(['image' => $filePath]);
+        }
+
+        return response()->json(['message' => 'News updated successfully'], 200);
+
+    } catch (ModelNotFoundException $e) {
+        return response()->json(['message' => 'No news found with this ID'], 404);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to update news'], 500);
     }
+}
+
 
 
 

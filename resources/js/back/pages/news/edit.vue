@@ -1,185 +1,192 @@
 <script setup>
-import { ref, onMounted, nextTick, watch } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import axios from "axios";
-import { useRoute } from "vue-router";
-import name from "../../components/name.vue";
+import { useRoute, useRouter } from "vue-router";
 import Quill from "quill";
+import "quill/dist/quill.snow.css";
+import axios from "axios";
+import name from "../../components/name.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const route = useRoute();
+const router = useRouter();
 const id = ref(route.params.id);
-const news = ref({ title: "", content: "", info: "" });
-const succ = ref("");
-const err = ref("");
-const token = useLocalStorage("token", "");
+const title = ref("");
+const content = ref("");
+const info = ref("");
 const imageUpload = ref(null);
+const token = useLocalStorage("token", "");
 const selectedimagedata = ref("");
-
 const editorContainer = ref(null);
 let quillEditor = null;
 
-onMounted(async () => {
-  try {
-    const res = await axios.get(`./api/news/edit/${id.value}`);
-    news.value = res.data.news;
+const initializeEditor = () => {
+    if (!editorContainer.value) return;
+    quillEditor = new Quill(editorContainer.value, {
+        theme: "snow",
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, 4, false] }],
+                ["bold", "italic", "underline", "strike"],
+                [{ script: "sub" }, { script: "super" }],
+                [{ color: [] }, { background: [] }],
+                [{ font: [] }],
+                [{ list: "ordered" }, { list: "bullet" }],
+                [{ align: [] }],
+                ["link", "image", "blockquote", "code-block"],
+                ["clean"],
+            ],
+        },
+        placeholder: "Write your news content here...",
+    });
 
-    await nextTick();
-    initializeEditor();
-  } catch (error) {
-    console.error(error);
-  }
+    quillEditor.on("text-change", () => {
+        content.value = quillEditor.root.innerHTML;
+    });
+
+    if (content.value) {
+        quillEditor.root.innerHTML = content.value;
+    }
+};
+
+onMounted(async () => {
+    try {
+        const res = await axios.get(`./api/news/edit/${id.value}`);
+        const newsData = res.data.news;
+        title.value = newsData.title;
+        content.value = newsData.content;
+        info.value = newsData.info;
+        if (newsData.image) selectedimagedata.value = newsData.image;
+        await nextTick();
+        initializeEditor();
+    } catch (error) {
+        toast.error("Failed to load news item.", { autoClose: 2000 });
+    }
 });
 
-const initializeEditor = () => {
-  if (!editorContainer.value) return;
-
-  quillEditor = new Quill(editorContainer.value, {
-    theme: "snow",
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, 4, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ script: "sub" }, { script: "super" }],
-        [{ color: [] }, { background: [] }],
-        [{ font: [] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ align: [] }],
-        ["link", "image", "blockquote", "code-block"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Write your news content here...",
-  });
-
-  if (news.value.content) {
-    quillEditor.root.innerHTML = news.value.content;
-  }
-
-  quillEditor.on("text-change", () => {
-    news.value.content = quillEditor.root.innerHTML;
-  });
-};
-
 const selectImage = () => {
-  const selectedImage = imageUpload.value?.files?.[0];
-  if (!selectedImage) return;
-  selectedimagedata.value = URL.createObjectURL(selectedImage);
+    const selectedImage = imageUpload.value?.files?.[0];
+    if (!selectedImage) return;
+    selectedimagedata.value = URL.createObjectURL(selectedImage);
 };
 
-const update = async () => {
-  const formData = new FormData();
-  formData.append("title", news.value.title);
+const updateNews = async () => {
+    const formData = new FormData();
+    formData.append("title", title.value);
+    formData.append("content", content.value);
+    formData.append("info", info.value);
+    if (imageUpload.value?.files?.[0]) {
+        formData.append("image", imageUpload.value.files[0]);
+    }
 
-  formData.append("content", news.value.content);
+    axios.defaults.headers.common["Authorization"] = token.value;
 
-  formData.append("info", news.value.info);
+    try {
+        const res = await axios.post(`./api/news/update/${id.value}`, formData);
+        toast.success(res.data.message || "News updated successfully!", {
+            autoClose: 2000,
+        });
+        router.push("/newspage");
+    } catch (error) {
+        toast.error(error.response?.data || "Update failed", {
+            autoClose: 2000,
+        });
+    }
+};
 
-  if (imageUpload.value?.files?.[0]) {
-    formData.append("image", imageUpload.value.files[0]);
-  }
+const deleteNews = async () => {
+    axios.defaults.headers.common["Authorization"] = token.value;
 
-  axios.defaults.headers.common["Authorization"] = token.value;
-  try {
-    const res = await axios.post(`./api/news/update/${id.value}`, formData);
-    succ.value = res.data.message;
-    window.location.href = "/admin#/newspage";
-  } catch (error) {
-    err.value = error.response?.data || "An error occurred";
-  }
+    try {
+        await axios.delete(`./api/news/destroy/${id.value}`);
+        toast.success("News deleted successfully!", { autoClose: 2000 });
+        router.push("/newspage");
+    } catch (error) {
+        toast.error(error.response?.data || "Failed to delete news", {
+            autoClose: 2000,
+        });
+    }
 };
 </script>
 
 <template>
-  <div>
     <div>
-      <name name="Edit News" />
-      <div class="bg-gray-100 p-16">
-        <div
-          class="border-2 bg-white border-gray-300 shadow-lg max-w-4xl mx-auto rounded shadow-gray-100"
-        ></div>
-      </div>
-      <div class="w-full bg-white rounded-lg md:mt-0 xl:p-0">
-        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <!-- Title Input -->
-          <div class="mb-6">
-            <label
-              for="title"
-              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
-            >
-              News Article
-            </label>
-            <textarea
-              id="title"
-              v-model="news.title"
-              rows="4"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              placeholder="Enter a catchy and informative headline"
-            ></textarea>
-          </div>
+        <name name="Edit News" />
 
-          <!-- Quill Editor for News Content -->
-          <div class="mb-6">
-            <label class="block mb-2 text-sm font-medium text-gray-900 capitalize">
-              News Content
-            </label>
+        <div class="p-4 bg-gray-50 min-h-screen mb-20">
             <div
-              ref="editorContainer"
-              class="preview quil-editor border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[200px]"
-              v-html="content"
-            ></div>
-          </div>
-
-          <!-- Image Upload -->
-          <div class="mb-6">
-            <label
-              for="file"
-              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
+                class="max-w-2xl mx-auto bg-white border border-gray-200 rounded-md shadow-sm p-4"
             >
-              Upload Image for News
-            </label>
-            <input
-              accept=".png,.jpg,.jpeg"
-              type="file"
-              ref="imageUpload"
-              @change="selectImage"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            />
-          </div>
+                <h1 class="text-base font-semibold text-sky-700 mb-3">
+                    Edit News
+                </h1>
 
-          <!-- Display selected image preview -->
-          <img
-            v-if="selectedimagedata"
-            :src="selectedimagedata"
-            alt="Preview"
-            class="max-w-full h-auto mb-4"
-          />
+                <form @submit.prevent="updateNews" class="space-y-4 text-sm">
+                    <!-- Title -->
+                    <div>
+                        <label for="title" class="block mb-1 text-gray-700"
+                            >News Title</label
+                        >
+                        <textarea
+                            id="title"
+                            v-model="title"
+                            rows="2"
+                            placeholder="Enter news title"
+                            class="w-full border border-gray-300 rounded-md p-1.5 bg-gray-50 focus:ring-1 focus:ring-blue-500 outline-none"
+                        ></textarea>
+                    </div>
 
-          <!-- Read More Links -->
-          <div class="mb-6">
-            <label
-              for="info"
-              class="block mb-2 text-sm font-medium text-gray-900 capitalize"
-            >
-              Read More Links
-            </label>
-            <textarea
-              id="info"
-              v-model="news.info"
-              rows="4"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              placeholder="Include any relevant links to additional information or related articles"
-            ></textarea>
-          </div>
+                    <!-- Content -->
+                    <div>
+                        <label class="block mb-1 text-gray-700"
+                            >News Content</label
+                        >
+                        <div
+                            ref="editorContainer"
+                            class="min-h-[120px] rounded-md border border-gray-300 p-2 bg-gray-50 text-sm"
+                        ></div>
+                    </div>
 
-          <!-- Update Button -->
-          <button
-            @click.prevent="update"
-            class="text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg capitalize text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
-          >
-            Update News
-          </button>
+                    <!-- Image Upload -->
+                    <div>
+                        <label for="file" class="block mb-1 text-gray-700"
+                            >Upload Image</label
+                        >
+                        <input
+                            accept=".png,.jpg,.jpeg"
+                            type="file"
+                            ref="imageUpload"
+                            @change="selectImage"
+                            class="w-full border border-gray-300 rounded-md p-1.5 bg-gray-50 text-xs"
+                        />
+                        <img
+                            v-if="selectedimagedata"
+                            :src="selectedimagedata"
+                            alt="Preview"
+                            class="mt-2 max-w-[200px] rounded-sm border border-gray-200"
+                        />
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-between mt-4">
+                        <button
+                            type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-4 rounded-md text-sm"
+                        >
+                            <i class="fas fa-save mr-1"></i> Update
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="deleteNews"
+                            class="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
+                        >
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>

@@ -86,7 +86,8 @@ Route::middleware(['auth:api'])->group(function () {
     
     //testimoniyals route
     Route::post('/store/testimonial', [TestimonailController::class, 'store']);
-    Route::post('/testimonial/hidden', [TestimonailController::class, 'hidden']);
+ Route::post('/store/testimonial', [TestimonailController::class, 'store']);
+
     Route::put('/testimonials/{id}/hidden', [TestimonailController::class, 'updateHidden']);
     
     
@@ -103,9 +104,21 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
+Route::get(   'testimonial',               [TestimonailController::class, 'index']);
+Route::post(  'testimonial',               [TestimonailController::class, 'store']);
+Route::delete('testimonial/hidden',        [TestimonailController::class, 'hidden']);
+Route::post(  'testimonial/{id}',          [TestimonailController::class, 'update']);  // or PUT
+Route::delete('testimonial/{id}',          [TestimonailController::class, 'destroy']);
+
+ 
+
+Route::get('department', [DepartmentContentroller::class, 'index']);
+Route::post('department', [DepartmentContentroller::class, 'store']);
+Route::get('department/{id}', [DepartmentContentroller::class, 'edit']); // or PUT
+Route::delete('department/{id}', [DepartmentContentroller::class, 'destroy']);
+Route::put('/department/{id}', [DepartmentContentroller::class, 'update']);
 
 
-    
     // Route::post('/staff', [StaffController::class, 'store']);
     Route::delete('/staff/deletes/{id}', [StaffController::class, 'destroy']);
     // new updated and efficent route

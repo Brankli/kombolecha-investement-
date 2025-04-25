@@ -57,7 +57,7 @@ const cards = [
             <div
                 v-for="(card, idx) in cards"
                 :key="idx"
-                class="p-1 bg-gradient-to-r from-sky-500 to-sky-600 rounded-xl md:rounded-2xl h-full transform transition-all duration-300 border-2 border-sky-500"
+                class="p-1 rounded-xl md:rounded-2xl h-full transform transition-all duration-300 border-2 border-sky-500"
             >
                 <div
                     class="bg-white rounded-2xl p-4 md:p-8 flex flex-col justify-center items-center h-full"

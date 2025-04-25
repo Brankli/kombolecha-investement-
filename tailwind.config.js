@@ -20,16 +20,25 @@ module.exports = {
                 },
             },
             fontFamily: {
-                body: ["Nunito"],
-                Cabin: ["Cabin"],
-                roboto: ["Roboto"],
+                body: ["Nunito", "sans-serif"],
+                Cabin: ["Cabin", "sans-serif"],
+                roboto: ["Roboto", "sans-serif"],
+            },
+            backgroundImage: {
+                "hero-pattern": "url('/asset/errorimage/plain.jpg')",
+                history: "url('/asset/images/Kombolcha-111.jpg')",
+                newsbackground: "url('/asset/images/newsbackground.jpg')",
+            },
+            animation: {
+                "fade-in": "fadeIn 1s ease-out forwards",
+            },
+            keyframes: {
+                fadeIn: {
+                    "0%": { opacity: "0", transform: "translateY(20px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
+                },
             },
         },
-        backgroundImage: {
-            "hero-pattern": "url('/asset/errorimage/plain.jpg')",
-            history: "url('/asset/images/Kombolcha-111.jpg')",
-            newsbackground: "url('/asset/images/newsbackground.jpg')",
-        },
     },
-     plugins: [],
+    plugins: [],
 };

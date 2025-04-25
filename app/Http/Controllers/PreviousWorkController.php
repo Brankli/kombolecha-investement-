@@ -79,9 +79,9 @@ class PreviousWorkController extends Controller
         }
     }
 
-    public function update(Request $request,$id)
-    {
-        try {
+ public function update(Request $request, $id)
+{
+    try {
         $work = PreviousWork::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
@@ -90,23 +90,37 @@ class PreviousWorkController extends Controller
             'category' => 'max:255',
         ]);
 
-        
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 422);
-            } 
- 
-            if ($request->hasFile('image')) {
-                Storage::disk('public')->delete($work->image);
-                $image = $request->file('image');
-                $filePath = $image->store('portfolio', 'public');
-                $work->update(['image' => $filePath]);
-            }
-
-            return response()->json(['message' => 'portifolio updatd succefully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create previous work'], 500);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
         }
+
+        $data = [];
+
+        if ($request->has('title')) {
+            $data['title'] = $request->input('title');
+        }
+
+        if ($request->has('category')) {
+            $data['category'] = $request->input('category');
+        }
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            Storage::disk('public')->delete($work->image);
+            // Save new image
+            $image = $request->file('image');
+            $filePath = $image->store('portfolio', 'public');
+            $data['image'] = $filePath;
+        }
+
+        // Now apply all updates
+        $work->update($data);
+
+        return response()->json(['message' => 'Portfolio updated successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to update previous work'], 500);
     }
+}
 
     public function destroy($id)
     {

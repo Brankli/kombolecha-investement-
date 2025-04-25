@@ -2,177 +2,155 @@
 import name from "../../../components/name.vue";
 import axios from "axios";
 import { onMounted, ref } from "vue";
-const contents = ref([]);
-const departments = ref([]);
 
-onMounted(async () => {
-    await axios.get('./api/getall/content').then(res => {
-        contents.value = res.data.WebContents;
-    }).catch(err => {});
+// State
+const department = ref({});
+const showEdit = ref(false);
+const editForm = ref({ mission: "", vision: "", goal: "" });
+const loading = ref(false);
+const error = ref(null);
 
-    await axios.get('./api/getall/department').then(res => {
-        departments.value = res.data.departmentContents;
-    }).catch(err => {});
-});
+// Fetch the single department record on mount
+onMounted(fetchDepartment);
+
+async function fetchDepartment() {
+    try {
+        const res = await axios.get("/api/getall/department");
+        // your API returns { data: { ... } }
+        department.value = res.data?.data || {};
+    } catch (e) {
+        console.error("Failed to fetch department:", e);
+    }
+}
+
+// Enter edit mode and preload form
+function enableEdit() {
+    editForm.value.mission = department.value.mission;
+    editForm.value.vision = department.value.vision;
+    editForm.value.goal = department.value.goal;
+    error.value = null;
+    showEdit.value = true;
+}
+
+// Submit updated fields
+async function handleEditSubmit() {
+    loading.value = true;
+    error.value = null;
+
+    try {
+        await axios.put(`/api/department/${department.value.id}`, {
+            mission: editForm.value.mission,
+            vision: editForm.value.vision,
+            goal: editForm.value.goal,
+        });
+        await fetchDepartment();
+        showEdit.value = false;
+    } catch (e) {
+        console.error(e);
+        error.value = "Failed to update department.";
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 
 <template>
-    <div class="bg-gray-100 mb-24">
+    <div class="bg-gray-100 min-h-screen pb-24">
         <name name="Web Contents" />
-        <div class="m-4 hidden rounded">
-            <div class="w-full bg-white border-b-2 rounded border-gray-200 flex flex-row justify-between">
-                <h1 class="font-bold text-gray-500 text-lg p-4 capitalize">web content</h1>
-            </div>
-            <!-- table start here -->
-            <div class="flex bg-white flex-col items-center justify-center">
-                <div class=" w-full  relative p-2 overflow-x-auto shadow-md sm:rounded-lg xs:p-5">
-                    <table class="w-full z-0 text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+
+        <div class="px-4 pt-8">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b">
+                    <h1 class="text-xl font-semibold text-gray-700">
+                        Department Content
+                    </h1>
+                </div>
+
+                <div class="p-6">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead
+                            class="text-xs text-gray-700 uppercase bg-gray-100"
+                        >
                             <tr>
-                                <th scope="col" class="p-4">
-                                    <div class="flex items-center">
-                                        <input id="checkbox-all-search" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 focus:ring-2 ">
-                                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                                    </div>
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    logo
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    email
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    phone number
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    amaharic name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    edit
-                                </th>
+                                <th class="px-4 py-2">Key</th>
+                                <th class="px-4 py-2">Description</th>
                             </tr>
                         </thead>
-                        <tbody v-for="content in contents.data" :key="content.id">
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="w-4 p-4">
-                                    <div class="flex items-center">
-                                        <input id="checkbox-table-search-1" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-4 py-3">Mission</td>
+                                <td class="px-4 py-3">
+                                    <div v-if="!showEdit">
+                                        {{ department.mission }}
                                     </div>
+                                    <input
+                                        v-else
+                                        v-model="editForm.mission"
+                                        type="text"
+                                        class="w-full p-2 border rounded"
+                                    />
                                 </td>
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    <img :src="content.logo" class="h-10 w-10 object-cover" alt="logo">
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ content.name.slice(0, 30) }}
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-4 py-3">Vision</td>
+                                <td class="px-4 py-3">
+                                    <div v-if="!showEdit">
+                                        {{ department.vision }}
+                                    </div>
+                                    <input
+                                        v-else
+                                        v-model="editForm.vision"
+                                        type="text"
+                                        class="w-full p-2 border rounded"
+                                    />
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{ content.email.slice(0, 30) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ content.phone_no }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ content.amharicname }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <router-link :to="{ name: 'editweb', params: { id: content.id } }"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">edit</router-link>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-4 py-3">Goal</td>
+                                <td class="px-4 py-3">
+                                    <div v-if="!showEdit">
+                                        {{ department.goal }}
+                                    </div>
+                                    <input
+                                        v-else
+                                        v-model="editForm.goal"
+                                        type="text"
+                                        class="w-full p-2 border rounded"
+                                    />
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
+                    <div class="flex justify-end mt-4 space-x-2">
+                        <button
+                            v-if="!showEdit"
+                            @click="enableEdit"
+                            class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                        >
+                            Edit
+                        </button>
+
+                        <template v-else>
+                            <button
+                                @click="handleEditSubmit"
+                                :disabled="loading"
+                                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                            >
+                                {{ loading ? "Saving..." : "Save" }}
+                            </button>
+                            <button
+                                @click="showEdit = false"
+                                class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                            >
+                                Cancel
+                            </button>
+                        </template>
+                    </div>
+
+                    <p v-if="error" class="text-red-600 mt-2">{{ error }}</p>
                 </div>
             </div>
-        </div>
-        <!-- department table start here -->
-        <div class="m-4 mt-16 rounded">
-            <div class="w-full bg-white border-b-2 rounded border-gray-200 flex flex-row justify-between">
-                <h1 class="font-bold text-gray-500 text-lg p-4 capitalize">Departments content</h1>
-            </div>
-            <!-- table start here -->
-            <div class="flex bg-white flex-col items-center justify-center">
-                <div class=" w-full  relative p-2 overflow-x-auto shadow-md sm:rounded-lg xs:p-5">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    profile
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    d. name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    position
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    email
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    phone number
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    mission
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    vission
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    goal
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    edit
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody v-for="department in departments" :key="department.id">
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    <img :src="department.profile" class="h-10 w-10 object-cover" alt="profile">
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ department.name.slice(0, 15) }}
-                                </td>
-
-                                <td class="px-6 py-4">
-                                    {{ department.position.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ department.email.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ department.phone_no.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ department.mission.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ department.vision.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ department.goal.slice(0, 10) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <router-link :to="{ name: 'editdepartment', params: { id: department.id } }"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">edit
-                                    </router-link>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-
-            <!-- department table end here -->
-
         </div>
     </div>
 </template>
-

@@ -1,127 +1,103 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const emit = defineEmits(["closeEvent"]);
 const showSidebar = ref(false);
+const isMobile = ref(false);
+
+const items = ref([
+    { to: "/dashbord", icon: "home", label: "Dashboard" },
+    { to: "/newspage", icon: "newspaper", label: "News" },
+    { to: "/content", icon: "tv", label: "Content" },
+    { to: "/ourwork", icon: "list-check", label: "Our Works" },
+    { to: "/services", icon: "chart-line", label: "Services" },
+    { to: "/channels", icon: "file", label: "Channels" },
+    { to: "/sponsers", icon: "handshake", label: "Partners" },
+    { to: "/newtestimonial", icon: "comment", label: "Testimonies" },
+    { to: "/staff", icon: "paper-plane", label: "Staff" },
+    { to: "/sliderindex", icon: "image", label: "Slider" },
+]);
 
 const toggleSidebar = () => {
-  showSidebar.value = !showSidebar.value;
-  emit("closeEvent", showSidebar.value);
+    showSidebar.value = !showSidebar.value;
+    emit("closeEvent", showSidebar.value);
 };
 
-const props = defineProps({
-  user: "",
+const onLinkClick = () => {
+    if (isMobile.value && showSidebar.value) {
+        toggleSidebar();
+    }
+};
+
+const updateIsMobile = () => {
+    isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
 });
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", updateIsMobile);
+});
+
+defineProps({ user: Object });
 </script>
 
 <template>
-  <div class="fixed md:relative bg-darkblue block min-h-screen w-fit">
-    <div>
-      <font-awesome-icon
-        @click.prevent="toggleSidebar"
-        class="material-icons text-white block md:hidden text-white-500 m-2 w-20 align-middle cursor-pointer"
-        icon="menu"
-      />
-    </div>
-    <div
-      class="bg-darkblue text-cyan-100 w-72 space-y-6 px-4 py-4 relative inset-y-0 left-0 md:relative transform transition-transform duration-200 ease-out"
-      :class="{
-        'translate-x-0': showSidebar,
-        '-translate-x-full': !showSidebar,
-        'md:translate-x-0': true,
-      }"
-    >
-      <div class="flex flex-row justify-between">
-        <div class="flex flex-row gap-4 align-middle">
-          <img
-            v-if="props.user.image"
-            class="w-10 h-10 rounded-full"
-            :src="props.user.image"
-            alt=""
-          />
-          <h1 class="font-bold my-auto text-lg align-middle uppercase tracking-wider">
-            {{ props.user.name }}
-          </h1>
+    <!-- Sidebar wrapper: fixed width to prevent shrink effect -->
+    <div class="fixed md:relative z-50 bg-darkblue min-h-screen w-72 mb-24">
+        <!-- Mobile hamburger -->
+        <div class="md:hidden p-2">
+            <font-awesome-icon
+                @click.prevent="toggleSidebar"
+                :icon="showSidebar ? 'xmark' : 'bars'"
+                class="text-white text-2xl cursor-pointer"
+            />
         </div>
-        <router-link to="/dashbord">
-          <font-awesome-icon icon="settings" class="text-white text-2xl my-auto" />
-        </router-link>
-      </div>
-      <hr />
-      <nav>
-        <router-link
-          to="/dashbord"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="home" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">Dashboard</span>
-        </router-link>
-        <router-link
-          to="/newspage"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="newspaper" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">news</span>
-        </router-link>
-        <router-link
-          to="/content"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="tv" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">Content</span></router-link
-        >
-        <router-link
-          to="/ourwork"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="list-check" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">Our Work</span></router-link
-        >
-        <router-link
-          to="/services"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="chart-line" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">services</span></router-link
-        >
-        <router-link
-          to="/channels"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="file" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">Channels</span></router-link
-        >
-        <router-link
-          to="/sponsers"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="handshake" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">Partners</span></router-link
-        >
-        <router-link
-          to="/newtestimonial"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="comment" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2"
-            >Testimonies</span
-          ></router-link
-        >
-        <router-link
-          to="/staff"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="paper-plane" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">staff</span></router-link
-        >
-        <router-link
-          to="/sliderindex"
-          class="flex items-center space-x-2 py-3 px-4 group transition duration-200 hover:bg-cyan-700 rounded hover:text-cyan-300"
-        >
-          <font-awesome-icon icon="paper-plane" class="text-white" />
-          <span class="text-xl font-semibold text-white px-2">slider</span></router-link
-        >
-      </nav>
+
+        <!-- Slide-in Sidebar Panel -->
+        <transition name="slide">
+            <div
+                v-show="showSidebar || !isMobile"
+                :class="[
+                    'bg-darkblue text-cyan-100 w-72 space-y-6 px-4 py-4 fixed md:relative inset-y-0 left-0 transition-transform duration-200 ease-out z-40',
+                    showSidebar || !isMobile
+                        ? 'translate-x-0'
+                        : '-translate-x-full',
+                ]"
+            >
+                <!-- Nav Links -->
+                <nav class="overflow-y-auto h-[calc(100vh-6rem)] space-y-1">
+                    <router-link
+                        v-for="item in items"
+                        :key="item.to"
+                        :to="item.to"
+                        @click="onLinkClick"
+                        class="flex items-center space-x-2 py-3 px-4 hover:bg-cyan-700 rounded hover:text-cyan-300 transition"
+                    >
+                        <font-awesome-icon
+                            :icon="item.icon"
+                            class="text-white"
+                        />
+                        <span class="text-xl font-semibold">{{
+                            item.label
+                        }}</span>
+                    </router-link>
+                </nav>
+            </div>
+        </transition>
     </div>
-  </div>
 </template>
+
+<style scoped>
+.slide-enter-from,
+.slide-leave-to {
+    transform: translateX(-100%);
+}
+.slide-enter-active,
+.slide-leave-active {
+    transition: transform 0.2s ease;
+}
+</style>

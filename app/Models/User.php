@@ -125,5 +125,9 @@ class User extends Authenticatable
     public function staff(){
         return $this->hasMany(staff::class,'user_id');
     }
+    public function testimonails()
+{
+    return $this->hasMany(Testimonail::class, 'author_id');
+}
 }
         

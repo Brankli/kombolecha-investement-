@@ -51,14 +51,14 @@ const setLanguage = (lang) => {
 <template>
     <header class="bg-briteblue text-white w-full shadow-md">
         <nav
-            class="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center"
+            class="max-w-screen-xl mx-auto px-4 flex justify-between items-center"
         >
             <!-- Logo -->
             <div class="flex items-center gap-3">
                 <img
                     src="/asset/errorimage/logo.png"
                     alt="Logo"
-                    class="h-10 w-auto"
+                    class="w-16 h-16 rounded-full"
                 />
             </div>
 
@@ -76,7 +76,7 @@ const setLanguage = (lang) => {
                     t("About us")
                 }}</router-link>
                 <router-link class="nav-link" to="/Aboutekocha">{{
-                    t("Kocha")
+                    t("Kombolcha")
                 }}</router-link>
                 <router-link class="nav-link" to="/getourwork">{{
                     t("Our works")
@@ -138,9 +138,9 @@ const setLanguage = (lang) => {
             <!-- Mobile Toggle -->
             <button
                 @click="toggleMenu"
-                class="lg:hidden text-white text-3xl focus:outline-none"
+                class="lg:hidden text-white text-2xl font-bold focus:outline-none"
             >
-                <i class="material-icons">{{ menuOpen ? "close" : "menu" }}</i>
+                <i :class="menuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
             </button>
         </nav>
 
@@ -169,7 +169,7 @@ const setLanguage = (lang) => {
                     @click="closeMenu"
                     class="nav-link"
                     to="/Aboutekocha"
-                    >{{ t("Kocha") }}</router-link
+                    >{{ t("Kombolcha") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
@@ -242,7 +242,7 @@ const setLanguage = (lang) => {
 
 <style scoped>
 .nav-link {
-    @apply block px-3 py-2 hover:text-yellow-300 hover:scale-105 transition-transform;
+    @apply block px-3 py-2 hover:text-orange-400 hover:scale-105 transition-transform;
 }
 .dropdown-item {
     @apply block px-4 py-2 hover:bg-blue-100 transition duration-200;
