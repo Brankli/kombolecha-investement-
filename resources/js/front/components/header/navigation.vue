@@ -67,25 +67,25 @@ const setLanguage = (lang) => {
                 class="hidden lg:flex items-center gap-6 font-semibold text-white"
             >
                 <router-link class="nav-link" to="/">{{
-                    t("Home")
+                    t("lang.Home")
                 }}</router-link>
                 <router-link class="nav-link" to="/expansion">{{
-                    t("Departments")
+                    t("lang.Departments")
                 }}</router-link>
                 <router-link class="nav-link" to="/aboutdeps">{{
-                    t("About us")
+                    t("lang.about us")
                 }}</router-link>
                 <router-link class="nav-link" to="/Aboutekocha">{{
-                    t("Kombolcha")
+                    t("lang.About KC")
                 }}</router-link>
                 <router-link class="nav-link" to="/getourwork">{{
-                    t("Our works")
+                    t("lang.our works")
                 }}</router-link>
                 <router-link class="nav-link" to="/contact">{{
-                    t("Contact us")
+                    t("lang.Contact us")
                 }}</router-link>
                 <router-link class="nav-link" to="/resource">{{
-                    t("Resource")
+                    t("lang.Resource")
                 }}</router-link>
 
                 <!-- Desktop Language Switcher -->
@@ -151,43 +151,43 @@ const setLanguage = (lang) => {
                 class="lg:hidden border-t-2 border-orange-500 bg-briteblue flex flex-col gap-3 px-4 pb-4 text-white font-semibold"
             >
                 <router-link @click="closeMenu" class="nav-link" to="/">{{
-                    t("Home")
+                    t("lang.Home")
                 }}</router-link>
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/expansion"
-                    >{{ t("Departments") }}</router-link
+                    >{{ t("lang.Departments") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/aboutdeps"
-                    >{{ t("About us") }}</router-link
+                    >{{ t("lang.about us") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/Aboutekocha"
-                    >{{ t("Kombolcha") }}</router-link
+                    >{{ t("lang.About KC") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/getourwork"
-                    >{{ t("Our works") }}</router-link
+                    >{{ t("lang.our works") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/contact"
-                    >{{ t("Contact us") }}</router-link
+                    >{{ t("lang.Contact us") }}</router-link
                 >
                 <router-link
                     @click="closeMenu"
                     class="nav-link"
                     to="/resource"
-                    >{{ t("Resource") }}</router-link
+                    >{{ t("lang.Resource") }}</router-link
                 >
 
                 <!-- Mobile Language Switch -->

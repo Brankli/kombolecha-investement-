@@ -75,7 +75,7 @@ import subscribe from "./subscrib.vue";
                                 href="#"
                                 class="hover:text-blue-200 text-sm md:text-base"
                             >
-                                {{ $t("lang.compAdvantage") }}
+                                {{ $t("lang.comp Advantage") }}
                             </a>
                         </li>
                     </ul>
@@ -161,7 +161,7 @@ import subscribe from "./subscrib.vue";
                                 href="#"
                                 class="hover:text-blue-200 text-sm md:text-base"
                             >
-                                {{ $t("lang.industrydev") }}
+                                {{ $t("lang.industry dev") }}
                             </a>
                         </li>
                         <li>
