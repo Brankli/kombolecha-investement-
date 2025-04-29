@@ -3,7 +3,6 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const emit = defineEmits(["closeEvent"]);
 const showSidebar = ref(false);
-const isMobile = ref(false);
 
 const items = ref([
     { to: "/dashbord", icon: "home", label: "Dashboard" },
@@ -20,27 +19,8 @@ const items = ref([
 
 const toggleSidebar = () => {
     showSidebar.value = !showSidebar.value;
-    emit("closeEvent", showSidebar.value);
+    emit("closeEvent");
 };
-
-const onLinkClick = () => {
-    if (isMobile.value && showSidebar.value) {
-        toggleSidebar();
-    }
-};
-
-const updateIsMobile = () => {
-    isMobile.value = window.innerWidth < 768;
-};
-
-onMounted(() => {
-    updateIsMobile();
-    window.addEventListener("resize", updateIsMobile);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener("resize", updateIsMobile);
-});
 
 defineProps({ user: Object });
 </script>
@@ -60,13 +40,7 @@ defineProps({ user: Object });
         <!-- Slide-in Sidebar Panel -->
         <transition name="slide">
             <div
-                v-show="showSidebar || !isMobile"
-                :class="[
-                    'bg-darkblue text-cyan-100 w-72 space-y-6 px-4 py-4 fixed md:relative inset-y-0 left-0 transition-transform duration-200 ease-out z-40',
-                    showSidebar || !isMobile
-                        ? 'translate-x-0'
-                        : '-translate-x-full',
-                ]"
+                class="bg-darkblue text-cyan-100 w-72 space-y-6 px-4 py-4 fixed md:relative inset-y-0 left-0 transition-transform duration-200 ease-out z-40 translate-x-0"
             >
                 <!-- Nav Links -->
                 <nav class="overflow-y-auto h-[calc(100vh-6rem)] space-y-1">
@@ -74,7 +48,7 @@ defineProps({ user: Object });
                         v-for="item in items"
                         :key="item.to"
                         :to="item.to"
-                        @click="onLinkClick"
+                        @click="toggleSidebar"
                         class="flex items-center space-x-2 py-3 px-4 hover:bg-cyan-700 rounded hover:text-cyan-300 transition"
                     >
                         <font-awesome-icon

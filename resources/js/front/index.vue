@@ -8,6 +8,7 @@ import testimonial from "./components/testimonial.vue";
 import banner from "./components/banner.vue";
 import sidbar from "./components/sidebar.vue";
 import recentevent from "./news/component/recentevent.vue";
+import VisitTracker from "./VisitTracker.vue";
 
 const preEvent = ref(7);
 const currentEventPage = ref(1);
@@ -30,6 +31,7 @@ const paginateEvent = computed(() => {
 </script>
 <template>
     <div class="w-[90%] sm:w-[80%] mx-auto">
+        <VisitTracker />
         <div class="mt-8">
             <div class="">
                 <home />

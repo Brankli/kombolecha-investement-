@@ -25,7 +25,7 @@ import lang from "./lang.vue";
                     <!-- Phone -->
                     <span class="flex items-center gap-1">
                         <i class="fas fa-phone-alt text-xs"></i>
-                        <span class="text-xs">+25197 585 6741</span>
+                        <span class="text-xs">+251911953358</span>
                     </span>
                 </div>
             </div>

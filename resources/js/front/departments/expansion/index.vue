@@ -10,17 +10,17 @@ const serviceCategories = ref([
         image: "images/kocha-office.jpg",
     },
     {
-        title: "Expansion of Investment",
+        title: "Investment Promotion and Industrial Zone Development Team",
         key: "expansion",
         image: "images/money-invested.jpg",
     },
     {
-        title: "Industry Development",
+        title: "Industry Development Team",
         key: "development",
         image: "images/IPDC.jpg",
     },
     {
-        title: "Mining Licensing",
+        title: "Mineral License Administration and Development Team",
         key: "miniral",
         image: "images/extraction.jpg",
     },

@@ -1,16 +1,18 @@
 <script setup>
 import adminSidebar from "./components/adminSidebar.vue";
 import adminHeader from "./components/adminHeader.vue";
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import axios from "axios";
 import { useLocalStorage } from "@vueuse/core";
 
 const token = useLocalStorage("token", "");
-const sidebarClass = ref("hidden");
+const showSideBar = ref(false);
 const user = ref("");
 const collback = () => {
-    sidebarClass.value =
-        sidebarClass.value === "hidden" ? "unhidden" : "hidden";
+    showSideBar.value = !showSideBar.value;
+};
+const updateIsMobile = () => {
+    showSideBar.value = true;
 };
 
 onMounted(async () => {
@@ -22,13 +24,20 @@ onMounted(async () => {
         })
         .catch((err) => console.log(err));
 });
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", updateIsMobile);
+});
 </script>
 <template>
     <div v-if="token" class="flex flex-row fixed h-scree w-screen">
         <adminSidebar
             :user="user"
             @close-event="collback"
-            :class="sidebarClass"
+            :class="{
+                'hidden md:flex': !showSideBar,
+                flex: showSideBar,
+            }"
             class="lg:flex z-20 fixed h-screen"
         />
         <div class="w-full">
@@ -40,9 +49,3 @@ onMounted(async () => {
         </div>
     </div>
 </template>
-
-<style>
-.sidebarClass {
-    z-index: 100;
-}
-</style>

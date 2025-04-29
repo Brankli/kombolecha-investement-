@@ -112,10 +112,9 @@
                             >
                                 <td class="w-4 p-4">
                                     <i
-                                        class="material-icons text-green-700 cursor-pointer"
+                                        class="fas fa-eye text-green-700 cursor-pointer"
                                         @click="viewquestion(q.id)"
-                                        >visibility_off</i
-                                    >
+                                    ></i>
                                 </td>
                                 <td
                                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
@@ -134,9 +133,8 @@
                                 <td class="px-6 py-4">
                                     <i
                                         v-if="q.is_answered === 'yes'"
-                                        class="material-icons text-primary"
-                                        >mark_email_read</i
-                                    >
+                                        class="fas fa-envelope-open text-primary"
+                                    ></i>
                                     <router-link
                                         v-else
                                         :to="{
@@ -144,9 +142,9 @@
                                             params: { id: q.id },
                                         }"
                                     >
-                                        <i class="material-icons text-green-700"
-                                            >unsubscribe</i
-                                        >
+                                        <i
+                                            class="fas fa-times-circle text-green-700"
+                                        ></i>
                                     </router-link>
                                 </td>
                             </tr>
@@ -211,11 +209,6 @@ onMounted(async () => {
     axios.defaults.headers.common[
         "Authorization"
     ] = `Bearer ${token.value.replace(/^Bearer\s+/i, "")}`;
-
-    // B) Record the visit (ignore failures)
-    axios.post("/api/visitor").catch(() => {
-        console.warn("Visitor record failed");
-    });
 
     // C) Fetch visitor count
     try {

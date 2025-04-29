@@ -28,14 +28,13 @@ import testimonial from "./pages/testimonies/create.vue";
 import newtestimonial from "./pages/testimonies/index.vue";
 import banner from "./pages/banner/create.vue";
 import newbanner from "./pages/banner/index.vue";
-import staff from "./pages/staff/index.vue"
-import newstaff from "./pages/staff/create.vue"
-import sliderindex from "./pages/slider/index.vue"
-import slidercreate from "./pages/slider/create.vue"
-
+import staff from "./pages/staff/index.vue";
+import newstaff from "./pages/staff/create.vue";
+import sliderindex from "./pages/slider/index.vue";
+import slidercreate from "./pages/slider/create.vue";
 
 //front routes
-import frontPage from "../front/frontPage.vue"
+import frontPage from "../front/frontPage.vue";
 import mainPage from "../front/index.vue";
 import contact from "../front/contact/index.vue";
 import resource from "../front/resource/index.vue";
@@ -50,9 +49,7 @@ import geteventDetail from "../front/news/eventDetail/index";
 import getourwork from "../front/ourwork/index.vue";
 
 import login from "../login/loginPage.vue";
-import chengepassword from "../login/changeePassword.vue"
-
-
+import chengepassword from "../login/changeePassword.vue";
 
 const routes = [
     {
@@ -227,7 +224,7 @@ const routes = [
                     next();
                     return;
                 } else {
-                    next("/login");
+                    next("/investment-gat-eway/login");
                 }
             } else {
                 next();
@@ -308,7 +305,7 @@ const routes = [
     //logins
 
     {
-        path: "/login",
+        path: "/investment-gat-eway/login",
         name: "login",
         component: login,
     },
