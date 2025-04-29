@@ -34,6 +34,16 @@ class VisitorController extends Controller
     // POST /api/visitor
     public function store(Request $request)
     {
+
+        $check = Visitor::query()
+            ->where('ip_address', $request->ip())
+            ->where('created_at', '>=', Carbon::now()->subDay())
+            ->first();
+
+        if ($check) {
+            return;
+        }
+
         try {
             Visitor::create([
                 'ip_address' => $request->ip(),
